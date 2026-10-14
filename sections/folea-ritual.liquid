@@ -1,0 +1,94 @@
+<section class="ritual-section">
+  <div class="container">
+    <div class="section-heading text-center">
+      <span class="sub-heading">{{ section.settings.sub_heading }}</span>
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+      <p class="section-desc">{{ section.settings.desc }}</p>
+    </div>
+
+    <div class="ritual-steps-grid">
+      <div class="ritual-step">
+        <div class="step-circle">1</div>
+        <h4>{{ section.settings.step_1_title }}</h4>
+        <p>{{ section.settings.step_1_desc }}</p>
+      </div>
+      <div class="ritual-step">
+        <div class="step-circle">2</div>
+        <h4>{{ section.settings.step_2_title }}</h4>
+        <p>{{ section.settings.step_2_desc }}</p>
+      </div>
+      <div class="ritual-step">
+        <div class="step-circle">3</div>
+        <h4>{{ section.settings.step_3_title }}</h4>
+        <p>{{ section.settings.step_3_desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Folea 3-Step Ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "HOW TO USE"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "The 3-Step Folea Ritual"
+    },
+    {
+      "type": "textarea",
+      "id": "desc",
+      "label": "Description",
+      "default": "Less is more. A small pump goes a long way."
+    },
+    {
+      "type": "text",
+      "id": "step_1_title",
+      "label": "Step 1 Title",
+      "default": "Dispense"
+    },
+    {
+      "type": "textarea",
+      "id": "step_1_desc",
+      "label": "Step 1 Description",
+      "default": "Press 1 to 2 pumps of serum onto your clean palm. (Start with 1 pump for fine hair)."
+    },
+    {
+      "type": "text",
+      "id": "step_2_title",
+      "label": "Step 2 Title",
+      "default": "Warm & Activate"
+    },
+    {
+      "type": "textarea",
+      "id": "step_2_desc",
+      "label": "Step 2 Description",
+      "default": "Rub hands gently together for 3 seconds to warm and evenly distribute the botanical oils."
+    },
+    {
+      "type": "text",
+      "id": "step_3_title",
+      "label": "Step 3 Title",
+      "default": "Glide & Gloss"
+    },
+    {
+      "type": "textarea",
+      "id": "step_3_desc",
+      "label": "Step 3 Description",
+      "default": "Finger-comb through towel-dried or dry hair from mid-lengths to ends. Style as desired."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea 3-Step Ritual"
+    }
+  ]
+}
+{% endschema %}

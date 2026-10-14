@@ -1,0 +1,73 @@
+<div class="announcement-bar" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
+  <div class="marquee-track">
+    <div class="marquee-content">
+      <span>{{ section.settings.text_1 }}</span>
+      <span class="dot">•</span>
+      <span>{{ section.settings.text_2 }}</span>
+      <span class="dot">•</span>
+      <span>{{ section.settings.text_3 }}</span>
+      <span class="dot">•</span>
+      <span>{{ section.settings.text_4 }}</span>
+      <span class="dot">•</span>
+    </div>
+    <div class="marquee-content" aria-hidden="true">
+      <span>{{ section.settings.text_1 }}</span>
+      <span class="dot">•</span>
+      <span>{{ section.settings.text_2 }}</span>
+      <span class="dot">•</span>
+      <span>{{ section.settings.text_3 }}</span>
+      <span class="dot">•</span>
+      <span>{{ section.settings.text_4 }}</span>
+      <span class="dot">•</span>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Folea Announcement Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ECE5D8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#161514"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Announcement 1",
+      "default": "⚡ FREE EXPRESS DELIVERY ALL OVER PAKISTAN"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Announcement 2",
+      "default": "💵 CASH ON DELIVERY AVAILABLE NATIONWIDE"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "Announcement 3",
+      "default": "🌿 100% SATISFACTION OR 7-DAYS MONEY BACK GUARANTEE"
+    },
+    {
+      "type": "text",
+      "id": "text_4",
+      "label": "Announcement 4",
+      "default": "✨ 72-HOUR FRIZZ CONTROL FORMULA"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea Announcement Bar"
+    }
+  ]
+}
+{% endschema %}

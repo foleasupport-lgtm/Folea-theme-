@@ -1,0 +1,165 @@
+<section class="reviews-section" id="reviewsSection">
+  <div class="container">
+    <div class="section-heading text-center">
+      <span class="sub-heading">{{ section.settings.sub_heading }}</span>
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+    </div>
+
+    <!-- Scorecard -->
+    <div class="scorecard-wrapper">
+      <div class="scorecard-left">
+        <div class="score-large">{{ section.settings.score }}</div>
+        <div class="score-stars">★★★★★</div>
+        <div class="score-total">{{ section.settings.score_desc }}</div>
+      </div>
+      <div class="scorecard-bars">
+        <div class="bar-row">
+          <span>5 Star</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 92%;"></div></div>
+          <span>92%</span>
+        </div>
+        <div class="bar-row">
+          <span>4 Star</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 6%;"></div></div>
+          <span>6%</span>
+        </div>
+        <div class="bar-row">
+          <span>3 Star</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 2%;"></div></div>
+          <span>2%</span>
+        </div>
+        <div class="bar-row">
+          <span>2 Star</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 0%;"></div></div>
+          <span>0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Grid -->
+    <div class="reviews-grid">
+      {%- for block in section.blocks -%}
+        <div class="review-card" {{ block.shopify_attributes }}>
+          <div class="review-top">
+            <div class="reviewer-avatar">{{ block.settings.initials }}</div>
+            <div>
+              <div class="reviewer-name">{{ block.settings.name }} <span class="badge-check">✓ Verified</span></div>
+              <div class="review-date">{{ block.settings.date_city }}</div>
+            </div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <h4 class="review-title">"{{ block.settings.headline }}"</h4>
+          <p class="review-body">{{ block.settings.body }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Folea Customer Reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "HONEST FEEDBACK"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Loved by Thousands Nationwide"
+    },
+    {
+      "type": "text",
+      "id": "score",
+      "label": "Average Score",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "score_desc",
+      "label": "Score Subtitle",
+      "default": "Based on 1,240+ verified Pakistani customers"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Customer Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "Fatima Noor"
+        },
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Avatar Initials",
+          "default": "FN"
+        },
+        {
+          "type": "text",
+          "id": "date_city",
+          "label": "City & Time",
+          "default": "Karachi • 2 days ago"
+        },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Review Title",
+          "default": "Finally something that beats Karachi humidity!"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review Text",
+          "default": "I have frizzy wavy hair and every monsoon season my hair turns into a puffball. Two drops of Folea after towel drying and my hair stayed sleek even outdoors. Delivery took only 2 days via TCS!"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea Customer Reviews",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "name": "Fatima Noor",
+            "initials": "FN",
+            "date_city": "Karachi • 2 days ago",
+            "headline": "Finally something that beats Karachi humidity!",
+            "body": "I have frizzy wavy hair and every monsoon season my hair turns into a puffball. Two drops of Folea after towel drying and my hair stayed sleek even outdoors. Delivery took only 2 days via TCS!"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Mariam Ali",
+            "initials": "MA",
+            "date_city": "Lahore • 4 days ago",
+            "headline": "Zero greasiness! Bottle feels super luxury.",
+            "body": "The frosted bottle and packaging is top tier. Serum itself is light as water, smells clean and leaves an incredible mirror gloss. Highly recommended!"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Sadia Zaheer",
+            "initials": "SZ",
+            "date_city": "Islamabad • 1 week ago",
+            "headline": "Ordered 2-bottle pack on Cash on Delivery.",
+            "body": "Rider called before delivery and gave change easily. Best customer support team on WhatsApp. My sister took my first bottle so glad I ordered the bundle!"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

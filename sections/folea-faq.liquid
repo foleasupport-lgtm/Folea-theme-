@@ -1,0 +1,105 @@
+<section class="faq-section" id="faqSection">
+  <div class="container max-w-md">
+    <div class="section-heading text-center">
+      <span class="sub-heading">{{ section.settings.sub_heading }}</span>
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+    </div>
+
+    <div class="faq-accordion">
+      {%- for block in section.blocks -%}
+        <div class="faq-item {% if forloop.first %}active{% endif %}" {{ block.shopify_attributes }}>
+          <button class="faq-question">
+            <span>{{ block.settings.question }}</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>{{ block.settings.answer }}</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Folea FAQ Accordion",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "HAVE QUESTIONS?"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Frequently Asked Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How long does delivery take across Pakistan?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Delivery takes 2 to 4 business days. Major cities like Karachi, Lahore, and Islamabad/Rawalpindi usually receive deliveries within 48 hours via TCS and Leopards courier."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea FAQ Accordion",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does delivery take across Pakistan?",
+            "answer": "Delivery takes 2 to 4 business days. Major cities like Karachi, Lahore, and Islamabad/Rawalpindi usually receive deliveries within 48 hours via TCS and Leopards courier."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is Cash on Delivery (COD) available?",
+            "answer": "Yes, 100%! You do not need to pay anything online. You pay the exact cash amount to the courier rider at your doorstep when you receive your package."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will it make my hair oily, flat, or greasy?",
+            "answer": "No. Folea is formulated with ultra-lightweight dry botanical silicones and cold-pressed oils. It absorbs immediately into the cuticle, leaving a featherlight gloss without greasiness or weighing hair down."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I use this on color-treated or chemically straightened hair?",
+            "answer": "Absolutely. Folea is free from harsh sulfates, parabens, and drying alcohols. It provides intense thermal and UV protection for keratin-treated, rebonded, and dyed hair."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What if I am not satisfied with the product?",
+            "answer": "We stand behind our quality with a 7-Day Checking Warranty. If your item arrives damaged or you encounter any issue, contact our WhatsApp support for a quick, hassle-free replacement or return."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

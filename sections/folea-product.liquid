@@ -1,0 +1,399 @@
+{%- assign product = all_products[section.settings.featured_product] -%}
+{%- if product == blank or product.empty? -%}
+  {%- assign product = collections.all.products.first -%}
+{%- endif -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<main class="product-section" id="productSection">
+  <div class="container">
+    <div class="product-grid">
+      
+      <!-- Left: Product Media Gallery -->
+      <div class="product-gallery">
+        <div class="main-image-wrapper">
+          <span class="sale-badge">{{ section.settings.sale_badge_text }}</span>
+          {%- if product.featured_image != blank -%}
+            <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}" id="mainProductImg" class="main-product-img">
+          {%- elsif section.settings.custom_image_1 != blank -%}
+            <img src="{{ section.settings.custom_image_1 | image_url: width: 800 }}" alt="Folea Bottle" id="mainProductImg" class="main-product-img">
+          {%- else -%}
+            <img src="{{ 'folea-bottle.jpg' | asset_url }}" alt="Folea Anti-Frizz Hair Serum" id="mainProductImg" class="main-product-img">
+          {%- endif -%}
+        </div>
+
+        <div class="thumb-strip">
+          <button type="button" class="thumb-btn active" data-src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 800 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 800 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}">
+            <img src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 160 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 160 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Front Bottle">
+          </button>
+          <button type="button" class="thumb-btn" data-src="{% if product.images[1] != blank %}{{ product.images[1] | image_url: width: 800 }}{% elsif section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 800 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
+            <img src="{% if product.images[1] != blank %}{{ product.images[1] | image_url: width: 160 }}{% elsif section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 160 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}" alt="Texture Detail">
+          </button>
+          <button type="button" class="thumb-btn" data-src="{% if product.images[2] != blank %}{{ product.images[2] | image_url: width: 800 }}{% elsif section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 800 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}">
+            <img src="{% if product.images[2] != blank %}{{ product.images[2] | image_url: width: 160 }}{% elsif section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 160 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}" alt="Transformation">
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Product Buy Box & Backend Shopify Form -->
+      <div class="product-info-box">
+        <div class="rating-stars-row">
+          <div class="stars">★★★★★</div>
+          <span class="rating-text">{{ section.settings.rating_score }}</span>
+          <span class="verified-count">({{ section.settings.rating_count }})</span>
+        </div>
+
+        <h2 class="product-title">{% if product.title != blank %}{{ product.title }}{% else %}{{ section.settings.product_title }}{% endif %}</h2>
+        <div class="product-meta">{{ section.settings.product_meta }}</div>
+
+        <div class="price-row">
+          <span class="current-price" id="displayPrice">
+            {%- if current_variant.price -%}
+              {{ current_variant.price | money }}
+            {%- else -%}
+              {{ section.settings.bundle_1_price }}
+            {%- endif -%}
+          </span>
+          <span class="compare-price" id="displayComparePrice">
+            {%- if current_variant.compare_at_price -%}
+              {{ current_variant.compare_at_price | money }}
+            {%- else -%}
+              {{ section.settings.bundle_1_compare }}
+            {%- endif -%}
+          </span>
+          <span class="discount-pill" id="displayDiscount">{{ section.settings.bundle_1_save }}</span>
+        </div>
+
+        <div class="urgency-banner">
+          <span class="flame-icon">🔥</span>
+          <span>High Demand: Only <strong class="pulse-num">{{ section.settings.stock_left }} bottles</strong> left in this batch.</span>
+        </div>
+
+        <!-- REAL SHOPIFY BACKEND FORM -->
+        <form method="post" action="/cart/add" id="foleaProductForm" enctype="multipart/form-data" class="folea-native-form">
+          <input type="hidden" name="id" id="foleaVariantId" value="{{ current_variant.id }}">
+          <input type="hidden" name="quantity" id="foleaRealQuantity" value="1">
+
+          <!-- Bundle Selector (Synced with Shopify Quantity) -->
+          <div class="bundle-selector">
+            <div class="bundle-header">SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):</div>
+            
+            <div class="bundle-card selected" data-bundle="1" data-qty="1" data-price="{% if current_variant.price %}{{ current_variant.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if current_variant.compare_at_price %}{{ current_variant.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}">
+              <div class="bundle-radio"><span class="radio-dot"></span></div>
+              <div class="bundle-info">
+                <div class="bundle-title">{{ section.settings.bundle_1_title }}</div>
+                <div class="bundle-sub">{{ section.settings.bundle_1_sub }}</div>
+              </div>
+              <div class="bundle-pricing">
+                <div class="bundle-p">{{ section.settings.bundle_1_price }}</div>
+                <div class="bundle-was">{{ section.settings.bundle_1_compare }}</div>
+              </div>
+            </div>
+
+            <div class="bundle-card" data-bundle="2" data-qty="2" data-price="{{ section.settings.bundle_2_price }}" data-compare="{{ section.settings.bundle_2_compare }}" data-savings="{{ section.settings.bundle_2_save }}">
+              <div class="bundle-badge">MOST POPULAR • BEST DEAL</div>
+              <div class="bundle-radio"><span class="radio-dot"></span></div>
+              <div class="bundle-info">
+                <div class="bundle-title">{{ section.settings.bundle_2_title }}</div>
+                <div class="bundle-sub">{{ section.settings.bundle_2_sub }}</div>
+              </div>
+              <div class="bundle-pricing">
+                <div class="bundle-p">{{ section.settings.bundle_2_price }}</div>
+                <div class="bundle-was">{{ section.settings.bundle_2_compare }}</div>
+              </div>
+            </div>
+
+            <div class="bundle-card" data-bundle="3" data-qty="3" data-price="{{ section.settings.bundle_3_price }}" data-compare="{{ section.settings.bundle_3_compare }}" data-savings="{{ section.settings.bundle_3_save }}">
+              <div class="bundle-badge family-badge">BUY 2 GET 1 FREE</div>
+              <div class="bundle-radio"><span class="radio-dot"></span></div>
+              <div class="bundle-info">
+                <div class="bundle-title">{{ section.settings.bundle_3_title }}</div>
+                <div class="bundle-sub">{{ section.settings.bundle_3_sub }}</div>
+              </div>
+              <div class="bundle-pricing">
+                <div class="bundle-p">{{ section.settings.bundle_3_price }}</div>
+                <div class="bundle-was">{{ section.settings.bundle_3_compare }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="qty-and-action-row">
+            <span class="qty-label">Quantity:</span>
+            <div class="qty-control">
+              <button type="button" class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+              <input type="number" id="qtyInput" value="1" min="1" max="99" aria-label="Quantity">
+              <button type="button" class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+
+          <!-- CTA Buttons Row: Direct COD Checkout + Add to Cart -->
+          <div class="cta-actions-group">
+            <button type="button" class="primary-buy-btn pulse-glow" id="orderNowBtn">
+              <div class="btn-main-text">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+                <span id="btnTextLabel">{{ section.settings.cta_button_text }}</span>
+              </div>
+              <span class="btn-subtext">{{ section.settings.cta_subtext }}</span>
+            </button>
+
+            <button type="button" class="secondary-cart-btn" id="addToCartBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>ADD TO BAG</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Pakistani Trust Badges -->
+        <div class="trust-grid">
+          <div class="trust-item">
+            <div class="trust-icon">🚚</div>
+            <div class="trust-title">Fast Delivery</div>
+            <div class="trust-desc">2-4 Days (TCS & Leopards)</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">💵</div>
+            <div class="trust-title">Pay On Delivery</div>
+            <div class="trust-desc">Cash On Delivery in all cities</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">🛡️</div>
+            <div class="trust-title">7 Days Warranty</div>
+            <div class="trust-desc">Hassle-free replacement</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">🌿</div>
+            <div class="trust-title">100% Halal</div>
+            <div class="trust-desc">No Parabens or Alcohol</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Sticky Mobile Bottom Bar -->
+<div class="sticky-mobile-bar" id="stickyMobileBar">
+  <div class="sticky-inner">
+    <div class="sticky-thumb-info">
+      <img src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 100 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 100 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Folea Thumbnail">
+      <div>
+        <div class="sticky-title">Folea Serum</div>
+        <div class="sticky-price" id="stickyPrice">{{ section.settings.bundle_1_price }}</div>
+      </div>
+    </div>
+    <button type="button" class="sticky-action-btn pulse-glow" id="stickyOrderBtn">
+      <span>ORDER COD</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Added to Cart Toast Notification -->
+<div class="success-toast" id="cartSuccessToast">
+  <div class="toast-icon">✓</div>
+  <div>
+    <h4 id="toastTitle">Item Added to Bag!</h4>
+    <p id="toastMessage">Folea Serum was successfully added to your cart.</p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Folea 1-Product Showcase",
+  "settings": [
+    {
+      "type": "product",
+      "id": "featured_product",
+      "label": "Select Shopify Product"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product Title (Fallback)",
+      "default": "Anti-Frizz Hair Serum"
+    },
+    {
+      "type": "text",
+      "id": "product_meta",
+      "label": "Product Subtitle / Size",
+      "default": "50 ml ℮ 1.69 fl. oz • Lightweight Glass Hair Finish"
+    },
+    {
+      "type": "text",
+      "id": "sale_badge_text",
+      "label": "Sale Badge Text",
+      "default": "SALE • SAVE 33%"
+    },
+    {
+      "type": "text",
+      "id": "rating_score",
+      "label": "Rating Score",
+      "default": "4.9 / 5.0"
+    },
+    {
+      "type": "text",
+      "id": "rating_count",
+      "label": "Rating Reviews Count",
+      "default": "1,240+ Verified Reviews"
+    },
+    {
+      "type": "text",
+      "id": "stock_left",
+      "label": "Low Stock Number",
+      "default": "14"
+    },
+    {
+      "type": "header",
+      "content": "Bundle 1 (Starter)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_title",
+      "label": "Bundle 1 Title",
+      "default": "Buy 1 Bottle (Starter Pack)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_sub",
+      "label": "Bundle 1 Subtitle",
+      "default": "Ideal for 30 days daily styling"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_price",
+      "label": "Bundle 1 Price",
+      "default": "Rs. 1,999"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_compare",
+      "label": "Bundle 1 Was Price",
+      "default": "Rs. 2,999"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_save",
+      "label": "Bundle 1 Savings Pill",
+      "default": "SAVE RS. 1,000"
+    },
+    {
+      "type": "header",
+      "content": "Bundle 2 (Most Popular)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_2_title",
+      "label": "Bundle 2 Title",
+      "default": "Buy 2 Bottles (Couple / Bestie Pack)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_2_sub",
+      "label": "Bundle 2 Subtitle",
+      "default": "Free Nationwide Express Delivery included"
+    },
+    {
+      "type": "text",
+      "id": "bundle_2_price",
+      "label": "Bundle 2 Price",
+      "default": "Rs. 3,599"
+    },
+    {
+      "type": "text",
+      "id": "bundle_2_compare",
+      "label": "Bundle 2 Was Price",
+      "default": "Rs. 5,998"
+    },
+    {
+      "type": "text",
+      "id": "bundle_2_save",
+      "label": "Bundle 2 Savings Pill",
+      "default": "SAVE EXTRA RS. 400 + FREE DELIVERY"
+    },
+    {
+      "type": "header",
+      "content": "Bundle 3 (Family Pack)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_3_title",
+      "label": "Bundle 3 Title",
+      "default": "Buy 3 Bottles (Family Pack)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_3_sub",
+      "label": "Bundle 3 Subtitle",
+      "default": "1 Bottle completely FREE + VIP Gift Bag"
+    },
+    {
+      "type": "text",
+      "id": "bundle_3_price",
+      "label": "Bundle 3 Price",
+      "default": "Rs. 4,999"
+    },
+    {
+      "type": "text",
+      "id": "bundle_3_compare",
+      "label": "Bundle 3 Was Price",
+      "default": "Rs. 8,997"
+    },
+    {
+      "type": "text",
+      "id": "bundle_3_save",
+      "label": "Bundle 3 Savings Pill",
+      "default": "BUY 2 GET 1 FREE"
+    },
+    {
+      "type": "header",
+      "content": "Call To Action Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "CTA Button Text",
+      "default": "ORDER VIA CASH ON DELIVERY"
+    },
+    {
+      "type": "text",
+      "id": "cta_subtext",
+      "label": "CTA Button Subtext",
+      "default": "Pay at doorstep • Delivery in 2 to 4 Days"
+    },
+    {
+      "type": "header",
+      "content": "Media Gallery Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_1",
+      "label": "Product Photo 1 (Main Bottle)"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_2",
+      "label": "Product Photo 2 (Serum Texture)"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image_3",
+      "label": "Product Photo 3 (Results)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea 1-Product Showcase"
+    }
+  ]
+}
+{% endschema %}

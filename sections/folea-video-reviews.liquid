@@ -1,0 +1,139 @@
+<section class="ugc-video-section">
+  <div class="container">
+    <div class="section-heading text-center">
+      <span class="sub-heading">{{ section.settings.sub_heading }}</span>
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+      <p class="section-desc">{{ section.settings.desc }}</p>
+    </div>
+
+    <div class="video-carousel-wrapper">
+      <div class="video-carousel" id="videoCarousel">
+        {%- for block in section.blocks -%}
+          <div class="ugc-card" {{ block.shopify_attributes }}>
+            <div class="ugc-thumb">
+              {%- if block.settings.video != blank -%}
+                {{ block.settings.video | video_tag: autoplay: false, loop: true, controls: true, playsinline: true, class: 'ugc-native-video' }}
+              {%- elsif block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 480 }}" alt="{{ block.settings.author_name }}">
+                <div class="ugc-play-overlay"><span class="play-circle">▶</span></div>
+              {%- else -%}
+                <img src="{{ 'folea-ugc-1.jpg' | asset_url }}" alt="Review Video">
+                <div class="ugc-play-overlay"><span class="play-circle">▶</span></div>
+              {%- endif -%}
+
+              <div class="ugc-author-badge">
+                <div class="author-name">{{ block.settings.author_name }} <span class="badge-check">✓</span></div>
+                <div class="author-city">{{ block.settings.author_city }}</div>
+              </div>
+            </div>
+            <div class="ugc-caption">
+              <div class="ugc-stars">★★★★★</div>
+              <p>"{{ block.settings.caption }}"</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Folea 9:16 Video Reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "REAL EXPERIENCES"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Customer Video Reactions"
+    },
+    {
+      "type": "textarea",
+      "id": "desc",
+      "label": "Description",
+      "default": "See real Pakistani women test Folea Anti-Frizz Serum on live camera."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_card",
+      "name": "9:16 Video Review",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Shopify Video File (9:16)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Poster / Cover Image"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Customer Name",
+          "default": "Zoya K."
+        },
+        {
+          "type": "text",
+          "id": "author_city",
+          "label": "City & Status",
+          "default": "Lahore • Verified Buyer"
+        },
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "Review Quote",
+          "default": "My holy grail for humidity. Not sticky at all!"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea 9:16 Video Reviews",
+      "blocks": [
+        {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Zoya K.",
+            "author_city": "Lahore • Verified Buyer",
+            "caption": "My holy grail for humidity. Not sticky at all!"
+          }
+        },
+        {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Hira T.",
+            "author_city": "Islamabad • Verified Buyer",
+            "caption": "Look at this shine! Blowouts last 3 full days now."
+          }
+        },
+        {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Ayesha M.",
+            "author_city": "Karachi • Verified Buyer",
+            "caption": "Best serum in Pakistan right now. Bottle looks so aesthetic."
+          }
+        },
+        {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Dr. Sana R.",
+            "author_city": "Rawalpindi • Verified Buyer",
+            "caption": "Clean ingredients, no alcohol burn or greasy buildup."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

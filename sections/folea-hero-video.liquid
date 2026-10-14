@@ -1,0 +1,119 @@
+<section class="hero-video-section">
+  <div class="video-container">
+    {%- if section.settings.video != blank -%}
+      {{ section.settings.video | video_tag: autoplay: true, loop: section.settings.enable_loop, muted: true, controls: false, playsinline: true, class: 'bg-video', id: 'heroBgVideo' }}
+    {%- elsif section.settings.video_url != blank -%}
+      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline poster="{% if section.settings.fallback_image != blank %}{{ section.settings.fallback_image | image_url: width: 1200 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {%- else -%}
+      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline poster="{{ 'folea-texture.jpg' | asset_url }}">
+        <source src="{{ 'folea-hero-video.mp4' | asset_url }}" type="video/mp4">
+      </video>
+    {%- endif -%}
+
+    <div class="video-overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    
+    <div class="hero-content">
+      {%- if section.settings.badge != blank -%}
+        <div class="hero-badge">{{ section.settings.badge }}</div>
+      {%- endif -%}
+      <h1 class="hero-title">{{ section.settings.title }}</h1>
+      <p class="hero-tagline">{{ section.settings.subtitle }}</p>
+      {%- if section.settings.show_scroll_btn -%}
+        <a href="#productSection" class="hero-scroll-btn">
+          <span>{{ section.settings.scroll_btn_text }}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var heroVideo = document.getElementById('heroBgVideo');
+    if (heroVideo) {
+      heroVideo.play().catch(function() {});
+      // Freeze smoothly on the final frame when video finishes
+      heroVideo.addEventListener('ended', function() {
+        heroVideo.pause();
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Folea Hero Video Loop",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_loop",
+      "label": "Loop Video Infinitely",
+      "default": false,
+      "info": "When unchecked, video plays through to the end and stays frozen on the final product frame."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Custom Video (Requires paid plan)"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Or External MP4 Link (CDN/Cloud)"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback Poster Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Video Dark Overlay Opacity",
+      "default": 45
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Hero Badge",
+      "default": "PAKISTAN'S #1 ANTI-FRIZZ FORMULA"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Hero Title",
+      "default": "Effortless Frizz-Free Shine."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Hero Subtitle",
+      "default": "Engineered for humid weather, hard water & daily heat styling."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_btn",
+      "label": "Show 'Explore Ritual' Link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "scroll_btn_text",
+      "label": "Scroll Link Text",
+      "default": "Explore The Ritual"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea Hero Video Loop"
+    }
+  ]
+}
+{% endschema %}

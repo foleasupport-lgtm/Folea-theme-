@@ -1,0 +1,113 @@
+<section class="results-section">
+  <div class="container">
+    <div class="results-card">
+      <div class="results-image-box">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 900 }}" alt="Folea Results">
+        {%- else -%}
+          <img src="{{ 'folea-results.jpg' | asset_url }}" alt="Folea Before and After Hair Transformation">
+        {%- endif -%}
+      </div>
+      <div class="results-content-box">
+        <span class="sub-heading">{{ section.settings.sub_heading }}</span>
+        <h2>{{ section.settings.title }}</h2>
+        <p class="results-lead">{{ section.settings.lead }}</p>
+        
+        <div class="stat-pills">
+          <div class="stat-pill">
+            <span class="stat-number">{{ section.settings.stat_1_num }}</span>
+            <span class="stat-label">{{ section.settings.stat_1_label }}</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-number">{{ section.settings.stat_2_num }}</span>
+            <span class="stat-label">{{ section.settings.stat_2_label }}</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-number">{{ section.settings.stat_3_num }}</span>
+            <span class="stat-label">{{ section.settings.stat_3_label }}</span>
+          </div>
+        </div>
+
+        <a href="#productSection" class="btn-secondary-link">{{ section.settings.cta_link_text }} →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Folea Results Comparison",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Transformation / Split Image"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "CLINICALLY OBSERVED"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Visible Results From Pump 01."
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Description",
+      "default": "Say goodbye to dry, brittle, unmanageable hair. One pump transforms texture instantly without weighing hair down."
+    },
+    {
+      "type": "text",
+      "id": "stat_1_num",
+      "label": "Stat 1 Number",
+      "default": "97%"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 Label",
+      "default": "Reported instant frizz reduction"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_num",
+      "label": "Stat 2 Number",
+      "default": "94%"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 Label",
+      "default": "Noticed mirror-like shine without greasiness"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_num",
+      "label": "Stat 3 Number",
+      "default": "3x"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Stat 3 Label",
+      "default": "Faster detangling & blowout time"
+    },
+    {
+      "type": "text",
+      "id": "cta_link_text",
+      "label": "Link Text",
+      "default": "Claim Your Bottle Today"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea Results Comparison"
+    }
+  ]
+}
+{% endschema %}

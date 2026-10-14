@@ -1,0 +1,111 @@
+<section class="benefits-section">
+  <div class="container">
+    <div class="section-heading text-center">
+      <span class="sub-heading">{{ section.settings.sub_heading }}</span>
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+      <p class="section-desc">{{ section.settings.desc }}</p>
+    </div>
+
+    <div class="benefits-grid">
+      {%- for block in section.blocks -%}
+        <div class="benefit-card" {{ block.shopify_attributes }}>
+          <div class="benefit-num">0{{ forloop.index }}</div>
+          <div class="benefit-icon">{{ block.settings.icon }}</div>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.desc }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Folea Benefits Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "DESIGNED FOR YOU"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Why Hair Loves Folea"
+    },
+    {
+      "type": "textarea",
+      "id": "desc",
+      "label": "Section Description",
+      "default": "Formulated specifically for high humidity, dry blowouts, and chemically treated hair."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (Emoji or text)",
+          "default": "✨"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Benefit Title",
+          "default": "72-Hour Anti-Frizz Shield"
+        },
+        {
+          "type": "textarea",
+          "id": "desc",
+          "label": "Benefit Description",
+          "default": "Instantly locks down flyaways and unruly hair cuticle layers, even in 90% outdoor humidity."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea Benefits Grid",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "✨",
+            "title": "72-Hour Anti-Frizz Shield",
+            "desc": "Instantly locks down flyaways and unruly hair cuticle layers, even in 90% outdoor humidity."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "💧",
+            "title": "Weightless Glass Finish",
+            "desc": "Micro-botanical silicones and cold-pressed oils provide high-mirror shine with zero greasy residue."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "🛡️",
+            "title": "230°C Heat Protection",
+            "desc": "Protects delicate hair fibers from flat iron, curling rod, and blow-dry heat damage."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "🌿",
+            "title": "Cold-Pressed Botanical Trio",
+            "desc": "Rich in Moroccan Argan Oil, Golden Jojoba, and Vitamin E to deeply nourish damaged ends."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

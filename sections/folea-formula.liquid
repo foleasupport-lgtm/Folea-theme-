@@ -1,0 +1,92 @@
+<section class="formula-shipping-section">
+  <div class="container">
+    <div class="formula-grid">
+      <div class="info-box formula-box">
+        <div class="info-tag">{{ section.settings.formula_tag }}</div>
+        <h3>{{ section.settings.formula_title }}</h3>
+        <ul class="ingredients-list">
+          <li>
+            <strong>Moroccan Organic Argan Oil:</strong> Penetrates hair shafts to soften rough cuticles and seal split ends.
+          </li>
+          <li>
+            <strong>Golden Jojoba Seed Oil:</strong> Mimics natural scalp lipids to restore elasticity without heaviness.
+          </li>
+          <li>
+            <strong>Hydrolyzed Silk Keratin:</strong> Strengthens weak strands exposed to dyes and environmental pollutants.
+          </li>
+          <li>
+            <strong>Pure Alpha-Tocopherol (Vitamin E):</strong> Powerful antioxidant defense against UV and sun damage.
+          </li>
+        </ul>
+      </div>
+
+      <div class="info-box shipping-box">
+        <div class="info-tag">{{ section.settings.shipping_tag }}</div>
+        <h3>{{ section.settings.shipping_title }}</h3>
+        <div class="shipping-steps">
+          <div class="ship-row">
+            <div class="ship-icon">📦</div>
+            <div>
+              <strong>Same-Day Dispatch:</strong> Orders placed before 4 PM are packed and handed over to courier on the same day.
+            </div>
+          </div>
+          <div class="ship-row">
+            <div class="ship-icon">🚚</div>
+            <div>
+              <strong>Courier Partners:</strong> TCS, Leopards, and Trax with live SMS tracking sent to your WhatsApp.
+            </div>
+          </div>
+          <div class="ship-row">
+            <div class="ship-icon">💵</div>
+            <div>
+              <strong>Cash on Delivery:</strong> Inspect the parcel upon arrival and hand over cash to the courier rider.
+            </div>
+          </div>
+          <div class="ship-row">
+            <div class="ship-icon">🔄</div>
+            <div>
+              <strong>7 Days Checking Warranty:</strong> Any damage or defect is replaced immediately with 0 extra charges.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Folea Formula & Shipping",
+  "settings": [
+    {
+      "type": "text",
+      "id": "formula_tag",
+      "label": "Formula Badge",
+      "default": "FORMULATION TRANSPARENCY"
+    },
+    {
+      "type": "text",
+      "id": "formula_title",
+      "label": "Formula Title",
+      "default": "Key Active Ingredients"
+    },
+    {
+      "type": "text",
+      "id": "shipping_tag",
+      "label": "Shipping Badge",
+      "default": "ORDER & DELIVERY"
+    },
+    {
+      "type": "text",
+      "id": "shipping_title",
+      "label": "Shipping Title",
+      "default": "Nationwide Shipping & Returns"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Folea Formula & Shipping"
+    }
+  ]
+}
+{% endschema %}

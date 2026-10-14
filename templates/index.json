@@ -1,0 +1,253 @@
+{
+  "sections": {
+    "hero_video": {
+      "type": "folea-hero-video",
+      "settings": {
+        "title": "Effortless Frizz-Free Shine.",
+        "subtitle": "Engineered for humid weather, hard water & daily heat styling.",
+        "overlay_opacity": 55,
+        "show_scroll_btn": true
+      }
+    },
+    "main_product": {
+      "type": "folea-product",
+      "settings": {
+        "product_title": "Anti-Frizz Hair Serum",
+        "product_meta": "50 ml ℮ 1.69 fl. oz • Lightweight Glass Hair Finish",
+        "sale_badge_text": "SALE • SAVE 33%",
+        "rating_score": "4.9 / 5.0",
+        "rating_count": "1,240+ Verified Reviews",
+        "stock_left": "14",
+        "bundle_1_title": "Buy 1 Bottle (Starter Pack)",
+        "bundle_1_price": "Rs. 1,999",
+        "bundle_1_compare": "Rs. 2,999",
+        "bundle_2_title": "Buy 2 Bottles (Couple / Bestie Pack)",
+        "bundle_2_price": "Rs. 3,599",
+        "bundle_2_compare": "Rs. 5,998",
+        "bundle_3_title": "Buy 3 Bottles (Family Pack)",
+        "bundle_3_price": "Rs. 4,999",
+        "bundle_3_compare": "Rs. 8,997",
+        "cta_button_text": "ORDER VIA CASH ON DELIVERY"
+      }
+    },
+    "benefits_grid": {
+      "type": "folea-benefits",
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "✨",
+            "title": "72-Hour Anti-Frizz Shield",
+            "desc": "Instantly locks down flyaways and unruly hair cuticle layers, even in 90% outdoor humidity."
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "💧",
+            "title": "Weightless Glass Finish",
+            "desc": "Micro-botanical silicones and cold-pressed oils provide high-mirror shine with zero greasy residue."
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "🛡️",
+            "title": "230°C Heat Protection",
+            "desc": "Protects delicate hair fibers from straightener, curling rod, and blow-dry heat damage."
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "🌿",
+            "title": "Cold-Pressed Botanical Trio",
+            "desc": "Rich in Moroccan Argan Oil, Golden Jojoba, and Vitamin E to deeply nourish damaged ends."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4"
+      ],
+      "settings": {
+        "sub_heading": "DESIGNED FOR YOU",
+        "title": "Why Hair Loves Folea"
+      }
+    },
+    "transformation_results": {
+      "type": "folea-results",
+      "settings": {
+        "title": "Visible Results From Pump 01.",
+        "stat_1_num": "97%",
+        "stat_2_num": "94%",
+        "stat_3_num": "3x"
+      }
+    },
+    "formula_shipping": {
+      "type": "folea-formula",
+      "settings": {
+        "formula_title": "Key Active Ingredients",
+        "shipping_title": "Nationwide Shipping & Returns"
+      }
+    },
+    "three_step_ritual": {
+      "type": "folea-ritual",
+      "settings": {
+        "title": "The 3-Step Folea Ritual"
+      }
+    },
+    "ugc_video_reviews": {
+      "type": "folea-video-reviews",
+      "blocks": {
+        "ugc_1": {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Zoya K.",
+            "author_city": "Lahore • Verified Buyer",
+            "caption": "My holy grail for Karachi humidity. Not sticky at all!"
+          }
+        },
+        "ugc_2": {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Hira T.",
+            "author_city": "Islamabad • Verified Buyer",
+            "caption": "Look at this shine! Blowouts last 3 full days now."
+          }
+        },
+        "ugc_3": {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Ayesha M.",
+            "author_city": "Karachi • Verified Buyer",
+            "caption": "Best serum in Pakistan right now. Bottle looks so aesthetic."
+          }
+        },
+        "ugc_4": {
+          "type": "video_card",
+          "settings": {
+            "author_name": "Dr. Sana R.",
+            "author_city": "Rawalpindi • Verified Buyer",
+            "caption": "Clean ingredients, no alcohol burn or greasy buildup."
+          }
+        }
+      },
+      "block_order": [
+        "ugc_1",
+        "ugc_2",
+        "ugc_3",
+        "ugc_4"
+      ],
+      "settings": {
+        "title": "Customer Video Reactions"
+      }
+    },
+    "customer_reviews": {
+      "type": "folea-reviews",
+      "blocks": {
+        "rev_1": {
+          "type": "review",
+          "settings": {
+            "name": "Fatima Noor",
+            "initials": "FN",
+            "date_city": "Karachi • 2 days ago",
+            "headline": "Finally something that beats Karachi humidity!",
+            "body": "I have frizzy wavy hair and every monsoon season my hair turns into a puffball. Two drops of Folea after towel drying and my hair stayed sleek even outdoors. Delivery took only 2 days via TCS!"
+          }
+        },
+        "rev_2": {
+          "type": "review",
+          "settings": {
+            "name": "Mariam Ali",
+            "initials": "MA",
+            "date_city": "Lahore • 4 days ago",
+            "headline": "Zero greasiness! Bottle feels super luxury.",
+            "body": "The frosted bottle and packaging is top tier. Serum itself is light as water, smells clean and leaves an incredible mirror gloss. Highly recommended!"
+          }
+        },
+        "rev_3": {
+          "type": "review",
+          "settings": {
+            "name": "Sadia Zaheer",
+            "initials": "SZ",
+            "date_city": "Islamabad • 1 week ago",
+            "headline": "Ordered 2-bottle pack on Cash on Delivery.",
+            "body": "Rider called before delivery and gave change easily. Best customer support team on WhatsApp. My sister took my first bottle so glad I ordered the bundle!"
+          }
+        }
+      },
+      "block_order": [
+        "rev_1",
+        "rev_2",
+        "rev_3"
+      ],
+      "settings": {
+        "title": "Loved by Thousands Nationwide"
+      }
+    },
+    "faq_accordion": {
+      "type": "folea-faq",
+      "blocks": {
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does delivery take across Pakistan?",
+            "answer": "Delivery takes 2 to 4 business days. Major cities like Karachi, Lahore, and Islamabad/Rawalpindi usually receive deliveries within 48 hours via TCS and Leopards courier."
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is Cash on Delivery (COD) available?",
+            "answer": "Yes, 100%! You do not need to pay anything online. You pay the exact cash amount to the courier rider at your doorstep when you receive your package."
+          }
+        },
+        "faq_3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will it make my hair oily, flat, or greasy?",
+            "answer": "No. Folea is formulated with ultra-lightweight dry botanical silicones and cold-pressed oils. It absorbs immediately into the cuticle, leaving a featherlight gloss without greasiness or weighing hair down."
+          }
+        },
+        "faq_4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I use this on color-treated or chemically straightened hair?",
+            "answer": "Absolutely. Folea is free from harsh sulfates, parabens, and drying alcohols. It provides intense thermal and UV protection for keratin-treated, rebonded, and dyed hair."
+          }
+        },
+        "faq_5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What if I am not satisfied with the product?",
+            "answer": "We stand behind our quality with a 7-Day Checking Warranty. If your item arrives damaged or you encounter any issue, contact our WhatsApp support for a quick, hassle-free replacement or return."
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5"
+      ],
+      "settings": {
+        "title": "Frequently Asked Questions"
+      }
+    }
+  },
+  "order": [
+    "hero_video",
+    "main_product",
+    "benefits_grid",
+    "transformation_results",
+    "formula_shipping",
+    "three_step_ritual",
+    "ugc_video_reviews",
+    "customer_reviews",
+    "faq_accordion"
+  ]
+}

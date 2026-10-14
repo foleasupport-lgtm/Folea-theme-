@@ -1,0 +1,51 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-text">fole<span class="accent-a">a<span class="accent-mark">&#769;</span></span></div>
+        <p>{{ section.settings.about_text }}</p>
+      </div>
+      <div class="footer-links">
+        <h4>Customer Care</h4>
+        <p>WhatsApp: <strong>{{ section.settings.whatsapp_number }}</strong></p>
+        <p>Email: {{ section.settings.email }}</p>
+        <p>Timing: {{ section.settings.timings }}</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. All rights reserved. Powered by Shopify 2.0.</p>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Folea Footer",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "about_text",
+      "label": "About Brand Text",
+      "default": "Thoughtfully formulated. Beautifully simple. Official store for Pakistan."
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp Support Number",
+      "default": "+92 300 0000000"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Support Email",
+      "default": "support@folea.pk"
+    },
+    {
+      "type": "text",
+      "id": "timings",
+      "label": "Customer Service Hours",
+      "default": "Mon - Sat: 10:00 AM - 7:00 PM"
+    }
+  ]
+}
+{% endschema %}
