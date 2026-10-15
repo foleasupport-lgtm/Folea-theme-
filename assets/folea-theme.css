@@ -545,11 +545,16 @@ a {
 .bg-video::-webkit-media-controls,
 .bg-video::-webkit-media-controls-panel,
 .bg-video::-webkit-media-controls-play-button,
-.bg-video::-webkit-media-controls-start-playback-button {
+.bg-video::-webkit-media-controls-start-playback-button,
+.bg-video::-webkit-media-controls-overlay-play-button,
+.bg-video::-webkit-media-controls-status-display,
+.bg-video::-webkit-media-controls-current-time-display,
+.bg-video::-webkit-media-controls-time-remaining-display {
   display: none !important;
   -webkit-appearance: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .video-overlay {
@@ -557,6 +562,7 @@ a {
   inset: 0;
   background: linear-gradient(180deg, rgba(20, 18, 16, 0.45) 0%, rgba(20, 18, 16, 0.68) 100%);
   z-index: 1;
+  pointer-events: none;
 }
 
 .hero-content {
@@ -566,6 +572,11 @@ a {
   padding: 24px;
   color: #FFFFFF;
   max-width: 620px;
+  pointer-events: none;
+}
+
+.hero-content .hero-scroll-btn {
+  pointer-events: auto;
 }
 
 .hero-badge {
