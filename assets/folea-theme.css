@@ -195,37 +195,34 @@ a {
   text-align: center;
 }
 
-.brand-logo .logo-text {
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: 2.5px;
-  color: #1A1A1A;
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
-  position: relative;
 }
 
-.accent-a {
-  color: var(--color-accent);
-  position: relative;
-  display: inline-block;
+.folea-brand-img {
+  height: 32px;
+  width: auto;
+  max-width: 140px;
+  display: block;
+  object-fit: contain;
+  transition: opacity var(--transition-fast);
 }
 
-.accent-mark-svg {
-  position: absolute;
-  top: -4px;
-  right: -5px;
-  width: 8px;
-  height: 16px;
-  color: var(--color-accent);
-  pointer-events: none;
+.brand-logo:hover .folea-brand-img {
+  opacity: 0.88;
 }
 
-.accent-mark {
-  display: none !important;
+.footer-logo-img {
+  height: 34px;
+  max-width: 150px;
+  margin-bottom: 12px;
 }
 
-.brand-logo .logo-sub {
-  display: none !important;
+.drawer-header .brand-logo .folea-brand-img {
+  height: 28px;
 }
 
 .cart-btn {
