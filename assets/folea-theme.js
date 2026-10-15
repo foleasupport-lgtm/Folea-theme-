@@ -92,63 +92,155 @@ document.addEventListener('DOMContentLoaded', () => {
     shopNowCartBtn.addEventListener('click', closeCartDrawer);
   }
 
-  // Fetch Cart Details from Shopify AJAX API
+  // ----------------------------------------------------
+  // Persistent Hybrid Cart Store (Shopify API + Local Client Resilience)
+  // ----------------------------------------------------
+  function getLocalCart() {
+    try {
+      const data = localStorage.getItem('folea_cart_storage');
+      if (data) return JSON.parse(data);
+    } catch (e) {}
+    return { items: [], item_count: 0, total_price: 0, currency: 'PKR' };
+  }
+
+  function saveLocalCart(cart) {
+    try {
+      localStorage.setItem('folea_cart_storage', JSON.stringify(cart));
+    } catch (e) {}
+  }
+
+  function calculateCartTotals(cart) {
+    let count = 0;
+    let total = 0;
+    if (Array.isArray(cart.items)) {
+      cart.items.forEach(item => {
+        const q = item.quantity || 1;
+        count += q;
+        total += (item.price || 295000) * q;
+      });
+    }
+    cart.item_count = count;
+    cart.total_price = total;
+    return cart;
+  }
+
   function fetchCartData() {
     fetch('/cart.js')
       .then(res => {
         if (!res.ok) throw new Error('Not Shopify runtime');
         return res.json();
       })
-      .then(cart => {
-        updateCartUI(cart);
+      .then(shopifyCart => {
+        if (shopifyCart && shopifyCart.item_count > 0) {
+          saveLocalCart(shopifyCart);
+          updateCartUI(shopifyCart);
+        } else {
+          const localCart = getLocalCart();
+          if (localCart.item_count > 0) {
+            updateCartUI(localCart);
+          } else {
+            updateCartUI(shopifyCart);
+          }
+        }
       })
       .catch(() => {
-        // Fallback for local preview environment
+        const localCart = getLocalCart();
+        updateCartUI(localCart);
       });
   }
 
   function updateCartUI(cart) {
+    if (!cart) cart = getLocalCart();
+    calculateCartTotals(cart);
+
     if (cartCountBadge) cartCountBadge.textContent = cart.item_count;
     if (drawerCartCount) drawerCartCount.textContent = cart.item_count;
-    
-    // Format currency
-    const formattedTotal = (cart.total_price / 100).toLocaleString('en-PK', {
-      style: 'currency',
-      currency: cart.currency || 'PKR'
-    });
+
+    const formattedTotal = 'Rs. ' + Math.round(cart.total_price / 100).toLocaleString('en-US');
     if (drawerCartTotal) drawerCartTotal.textContent = formattedTotal;
 
+    if (!cartDrawerBody) return;
+
     if (cart.item_count === 0) {
-      if (cartDrawerBody) {
-        cartDrawerBody.innerHTML = `
-          <div class="cart-empty-state">
-            <p>Your bag is empty.</p>
-            <a href="#productSection" class="btn-primary-small" onclick="document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow='';">Order Folea Serum</a>
-          </div>
-        `;
-      }
+      cartDrawerBody.innerHTML = `
+        <div class="cart-empty-state">
+          <p>Your bag is empty.</p>
+          <a href="#productSection" class="btn-primary-small" onclick="document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow='';">Order Folea Serum</a>
+        </div>
+      `;
     } else {
-      if (cartDrawerBody) {
-        let itemsHTML = '<div class="cart-items-list">';
-        cart.items.forEach(item => {
-          const itemPrice = (item.final_line_price / 100).toLocaleString('en-PK', {
-            style: 'currency',
-            currency: cart.currency || 'PKR'
-          });
-          itemsHTML += `
-            <div class="drawer-cart-item">
-              <img src="${item.featured_image ? item.featured_image.url : ''}" alt="${item.title}">
-              <div class="item-details">
-                <h4>${item.product_title}</h4>
-                <div class="item-price">${itemPrice}</div>
-                <div class="item-qty">Qty: ${item.quantity}</div>
+      let itemsHTML = '<div class="cart-items-list">';
+      cart.items.forEach((item, index) => {
+        const itemLinePrice = 'Rs. ' + Math.round(((item.price || 295000) * item.quantity) / 100).toLocaleString('en-US');
+        const itemUnitPrice = 'Rs. ' + Math.round((item.price || 295000) / 100).toLocaleString('en-US');
+        const imgSrc = (item.featured_image && item.featured_image.url) ? item.featured_image.url : (item.image || 'https://via.placeholder.com/100?text=Folea');
+
+        itemsHTML += `
+          <div class="drawer-cart-item" data-index="${index}">
+            <img src="${imgSrc}" alt="${item.title || 'Folea Serum'}">
+            <div class="item-details" style="flex:1;">
+              <h4>${item.product_title || item.title || 'Folea Anti-Frizz Hair Serum'}</h4>
+              <div class="item-price">${itemLinePrice} <span style="font-size:11px; font-weight:400; color:#888;">(${itemUnitPrice} each)</span></div>
+              <div class="drawer-qty-control" style="display:inline-flex; align-items:center; gap:8px; margin-top:6px; background:#f4f0eb; padding:2px 8px; border-radius:14px;">
+                <button type="button" class="cart-qty-btn cart-qty-minus" data-index="${index}" style="border:none; background:none; font-size:16px; font-weight:bold; cursor:pointer; line-height:1; padding:2px 4px;">−</button>
+                <span class="cart-qty-val" style="font-size:13px; font-weight:700;">${item.quantity}</span>
+                <button type="button" class="cart-qty-btn cart-qty-plus" data-index="${index}" style="border:none; background:none; font-size:16px; font-weight:bold; cursor:pointer; line-height:1; padding:2px 4px;">+</button>
               </div>
             </div>
-          `;
+            <button type="button" class="cart-remove-item" data-index="${index}" title="Remove item" style="border:none; background:none; color:#a19b94; font-size:20px; cursor:pointer; padding:4px;">&times;</button>
+          </div>
+        `;
+      });
+      itemsHTML += '</div>';
+      cartDrawerBody.innerHTML = itemsHTML;
+
+      // Drawer item quantity listeners
+      cartDrawerBody.querySelectorAll('.cart-qty-minus').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.getAttribute('data-index'), 10);
+          adjustLocalCartQty(idx, -1);
         });
-        itemsHTML += '</div>';
-        cartDrawerBody.innerHTML = itemsHTML;
+      });
+
+      cartDrawerBody.querySelectorAll('.cart-qty-plus').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.getAttribute('data-index'), 10);
+          adjustLocalCartQty(idx, 1);
+        });
+      });
+
+      cartDrawerBody.querySelectorAll('.cart-remove-item').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.getAttribute('data-index'), 10);
+          removeLocalCartItem(idx);
+        });
+      });
+    }
+  }
+
+  function adjustLocalCartQty(index, change) {
+    const cart = getLocalCart();
+    if (cart.items && cart.items[index]) {
+      cart.items[index].quantity += change;
+      if (cart.items[index].quantity <= 0) {
+        cart.items.splice(index, 1);
       }
+      calculateCartTotals(cart);
+      saveLocalCart(cart);
+      updateCartUI(cart);
+    }
+  }
+
+  function removeLocalCartItem(index) {
+    const cart = getLocalCart();
+    if (cart.items && cart.items[index]) {
+      cart.items.splice(index, 1);
+      calculateCartTotals(cart);
+      saveLocalCart(cart);
+      updateCartUI(cart);
     }
   }
 
@@ -226,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ----------------------------------------------------
-  // 4. Real Shopify "Add To Bag" Action
+  // 4. Enhanced "Add To Bag" Action (Shopify API + Persistent Local Fallback)
   // ----------------------------------------------------
   if (addToCartBtn) {
     addToCartBtn.addEventListener('click', async () => {
@@ -237,50 +329,62 @@ document.addEventListener('DOMContentLoaded', () => {
       const variantId = await resolveVariantId();
       const qty = currentQuantity || 1;
 
-      if (!variantId) {
-        const form = document.getElementById('foleaProductForm');
-        if (form) form.submit();
-        addToCartBtn.disabled = false;
-        addToCartBtn.innerHTML = originalText;
-        return;
+      // Parse unit price in cents
+      let unitPriceInCents = 295000;
+      const displayPriceEl = document.getElementById('displayPrice') || document.getElementById('stickyPrice');
+      if (displayPriceEl) {
+        const rawNum = parseInt(displayPriceEl.textContent.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(rawNum) && rawNum > 0) {
+          unitPriceInCents = Math.round((rawNum / qty) * 100);
+        }
       }
 
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          items: [{
-            id: Number(variantId),
-            quantity: Number(qty)
-          }]
-        })
-      })
-      .then(res => {
-        if (!res.ok) throw new Error('Add to cart failed');
-        return res.json();
-      })
-      .then(() => {
-        addToCartBtn.disabled = false;
-        addToCartBtn.innerHTML = originalText;
-        showToast("Added to Bag!", `${qty}x Folea Serum added.`);
-        fetchCartData();
-        openCartDrawer();
-      })
-      .catch((err) => {
-        console.error('Cart add error:', err);
-        addToCartBtn.disabled = false;
-        addToCartBtn.innerHTML = originalText;
-        const form = document.getElementById('foleaProductForm');
-        if (form) form.submit();
-      });
+      // Add to persistent client cart
+      const cart = getLocalCart();
+      const existingItem = cart.items.find(i => i.id === (variantId || 'folea-serum'));
+      const productImg = (mainProductImg && mainProductImg.src) ? mainProductImg.src : '';
+
+      if (existingItem) {
+        existingItem.quantity += qty;
+        existingItem.price = unitPriceInCents;
+      } else {
+        cart.items.push({
+          id: variantId || 'folea-serum',
+          variant_id: variantId,
+          title: 'Folea Anti-Frizz Hair Serum',
+          product_title: 'Folea Anti-Frizz Hair Serum',
+          price: unitPriceInCents,
+          quantity: qty,
+          featured_image: { url: productImg }
+        });
+      }
+
+      calculateCartTotals(cart);
+      saveLocalCart(cart);
+      updateCartUI(cart);
+
+      // Background Shopify Sync
+      if (variantId) {
+        try {
+          await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ items: [{ id: Number(variantId), quantity: Number(qty) }] })
+          });
+        } catch (e) {
+          // Handled silently
+        }
+      }
+
+      addToCartBtn.disabled = false;
+      addToCartBtn.innerHTML = originalText;
+      showToast("Added to Bag!", `${qty}x Folea Serum added.`);
+      openCartDrawer();
     });
   }
 
   // ----------------------------------------------------
-  // 5. Real Shopify "ORDER VIA CASH ON DELIVERY" (Checkout Redirect)
+  // 5. Checkout & Order Handlers (COD & Sticky Bar Linking)
   // ----------------------------------------------------
   async function executeOrderViaCheckout() {
     if (orderNowBtn) {
@@ -289,8 +393,42 @@ document.addEventListener('DOMContentLoaded', () => {
       if (label) label.textContent = 'PROCEEDING TO CHECKOUT...';
     }
 
+    if (stickyOrderBtn) {
+      stickyOrderBtn.disabled = true;
+      const stickySpan = stickyOrderBtn.querySelector('span');
+      if (stickySpan) stickySpan.textContent = 'CHECKOUT...';
+    }
+
     const variantId = await resolveVariantId();
     const qty = currentQuantity || 1;
+
+    let unitPriceInCents = 295000;
+    const displayPriceEl = document.getElementById('displayPrice') || document.getElementById('stickyPrice');
+    if (displayPriceEl) {
+      const rawNum = parseInt(displayPriceEl.textContent.replace(/[^0-9]/g, ''), 10);
+      if (!isNaN(rawNum) && rawNum > 0) {
+        unitPriceInCents = Math.round((rawNum / qty) * 100);
+      }
+    }
+
+    const cart = getLocalCart();
+    const existing = cart.items.find(i => i.id === (variantId || 'folea-serum'));
+    if (existing) {
+      existing.quantity = Math.max(existing.quantity, qty);
+    } else {
+      cart.items.push({
+        id: variantId || 'folea-serum',
+        variant_id: variantId,
+        title: 'Folea Anti-Frizz Hair Serum',
+        product_title: 'Folea Anti-Frizz Hair Serum',
+        price: unitPriceInCents,
+        quantity: qty,
+        featured_image: { url: (mainProductImg && mainProductImg.src) ? mainProductImg.src : '' }
+      });
+    }
+    calculateCartTotals(cart);
+    saveLocalCart(cart);
+    updateCartUI(cart);
 
     if (variantId) {
       fetch('/cart/add.js', {
@@ -324,7 +462,51 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (orderNowBtn) orderNowBtn.addEventListener('click', executeOrderViaCheckout);
-  if (stickyOrderBtn) stickyOrderBtn.addEventListener('click', executeOrderViaCheckout);
+
+  if (stickyOrderBtn) {
+    stickyOrderBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      executeOrderViaCheckout();
+    });
+  }
+
+  const stickyThumbInfo = document.querySelector('.sticky-thumb-info');
+  if (stickyThumbInfo) {
+    stickyThumbInfo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      executeOrderViaCheckout();
+    });
+  }
+
+  const stickyMobileBar = document.getElementById('stickyMobileBar');
+  if (stickyMobileBar) {
+    stickyMobileBar.addEventListener('click', () => {
+      executeOrderViaCheckout();
+    });
+  }
+
+  // Handle drawer checkout buttons
+  const drawerCheckoutBtns = document.querySelectorAll('.btn-checkout');
+  drawerCheckoutBtns.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const variantId = await resolveVariantId();
+      const localCart = getLocalCart();
+      const totalQty = localCart.item_count || currentQuantity || 1;
+      if (variantId) {
+        e.preventDefault();
+        try {
+          await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ items: [{ id: Number(variantId), quantity: Number(totalQty) }] })
+          });
+          window.location.href = '/checkout';
+        } catch (err) {
+          window.location.href = `/cart/${variantId}:${totalQty}?checkout`;
+        }
+      }
+    });
+  });
 
   // ----------------------------------------------------
   // 6. UI Helpers (Toast, Gallery, FAQ)
