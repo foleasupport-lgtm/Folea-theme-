@@ -7,7 +7,7 @@
 
     <div class="faq-accordion">
       {%- for block in section.blocks -%}
-        <div class="faq-item {% if forloop.first %}active{% endif %}" {{ block.shopify_attributes }}>
+        <div class="faq-item" {{ block.shopify_attributes }}>
           <button class="faq-question">
             <span>{{ block.settings.question }}</span>
             <span class="faq-icon">+</span>

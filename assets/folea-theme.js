@@ -203,19 +203,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Helper: Auto-detect available product variant ID from Shopify catalog
+  async function resolveVariantId() {
+    let vid = foleaVariantId ? foleaVariantId.value : null;
+    if (vid && vid.trim() !== '' && vid !== '1') return vid;
+    try {
+      const res = await fetch('/products.json?limit=5');
+      const data = await res.json();
+      if (data.products && data.products.length > 0) {
+        for (const p of data.products) {
+          if (p.variants && p.variants.length > 0) {
+            vid = p.variants[0].id;
+            if (foleaVariantId) foleaVariantId.value = vid;
+            return vid;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Could not auto-resolve variant ID:', e);
+    }
+    return vid;
+  }
+
   // ----------------------------------------------------
   // 4. Real Shopify "Add To Bag" Action
   // ----------------------------------------------------
   if (addToCartBtn) {
-    addToCartBtn.addEventListener('click', () => {
-      const variantId = foleaVariantId ? foleaVariantId.value : null;
-      const qty = currentQuantity;
-
+    addToCartBtn.addEventListener('click', async () => {
       addToCartBtn.disabled = true;
       const originalText = addToCartBtn.innerHTML;
       addToCartBtn.innerHTML = `<span>ADDING...</span>`;
 
-      // Shopify AJAX API Call
+      const variantId = await resolveVariantId();
+      const qty = currentQuantity || 1;
+
+      if (!variantId) {
+        const form = document.getElementById('foleaProductForm');
+        if (form) form.submit();
+        addToCartBtn.disabled = false;
+        addToCartBtn.innerHTML = originalText;
+        return;
+      }
+
       fetch('/cart/add.js', {
         method: 'POST',
         headers: {
@@ -224,28 +253,28 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify({
           items: [{
-            id: variantId || 1,
-            quantity: qty
+            id: Number(variantId),
+            quantity: Number(qty)
           }]
         })
       })
-      .then(res => res.json())
-      .then(data => {
+      .then(res => {
+        if (!res.ok) throw new Error('Add to cart failed');
+        return res.json();
+      })
+      .then(() => {
         addToCartBtn.disabled = false;
         addToCartBtn.innerHTML = originalText;
         showToast("Added to Bag!", `${qty}x Folea Serum added.`);
+        fetchCartData();
         openCartDrawer();
       })
-      .catch(() => {
-        // Fallback for preview or mock
+      .catch((err) => {
+        console.error('Cart add error:', err);
         addToCartBtn.disabled = false;
         addToCartBtn.innerHTML = originalText;
-        if (cartCountBadge) {
-          const currentBadge = parseInt(cartCountBadge.textContent) || 0;
-          cartCountBadge.textContent = currentBadge + qty;
-        }
-        showToast("Added to Bag!", `${qty}x Folea Serum added.`);
-        openCartDrawer();
+        const form = document.getElementById('foleaProductForm');
+        if (form) form.submit();
       });
     });
   }
@@ -253,42 +282,45 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------------------------------------
   // 5. Real Shopify "ORDER VIA CASH ON DELIVERY" (Checkout Redirect)
   // ----------------------------------------------------
-  function executeOrderViaCheckout() {
-    const variantId = foleaVariantId ? foleaVariantId.value : null;
-    const qty = currentQuantity;
-
+  async function executeOrderViaCheckout() {
     if (orderNowBtn) {
       orderNowBtn.disabled = true;
       const label = document.getElementById('btnTextLabel');
       if (label) label.textContent = 'PROCEEDING TO CHECKOUT...';
     }
 
-    // In a live Shopify store:
-    // Adding the variant and redirecting straight to /checkout
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        items: [{
-          id: variantId || 1,
-          quantity: qty
-        }]
+    const variantId = await resolveVariantId();
+    const qty = currentQuantity || 1;
+
+    if (variantId) {
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          items: [{
+            id: Number(variantId),
+            quantity: Number(qty)
+          }]
+        })
       })
-    })
-    .then(() => {
-      window.location.href = '/checkout';
-    })
-    .catch(() => {
-      // Direct URL fallback supported natively by Shopify
-      if (variantId && variantId !== '') {
+      .then(() => {
+        window.location.href = '/checkout';
+      })
+      .catch(() => {
         window.location.href = `/cart/${variantId}:${qty}?checkout`;
+      });
+    } else {
+      const form = document.getElementById('foleaProductForm');
+      if (form) {
+        form.action = '/cart/add';
+        form.submit();
       } else {
         window.location.href = '/checkout';
       }
-    });
+    }
   }
 
   if (orderNowBtn) orderNowBtn.addEventListener('click', executeOrderViaCheckout);
@@ -338,6 +370,28 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+  // ----------------------------------------------------
+  // 7. Interactive Before & After Slider
+  // ----------------------------------------------------
+  const baSlider = document.getElementById('baSliderContainer');
+  const baRangeInput = document.getElementById('baRangeInput');
+  const baDivider = document.getElementById('baDivider');
+
+  if (baSlider && baRangeInput) {
+    const updateSlider = (val) => {
+      baSlider.style.setProperty('--ba-pos', `${val}%`);
+      if (baDivider) baDivider.style.left = `${val}%`;
+    };
+
+    baRangeInput.addEventListener('input', (e) => {
+      updateSlider(e.target.value);
+    });
+
+    baRangeInput.addEventListener('change', (e) => {
+      updateSlider(e.target.value);
+    });
+  }
 
   // Load initial cart count
   fetchCartData();

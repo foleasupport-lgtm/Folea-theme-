@@ -2,6 +2,13 @@
 {%- if product == blank or product.empty? -%}
   {%- assign product = collections.all.products.first -%}
 {%- endif -%}
+{%- if product == blank or product.empty? -%}
+  {%- for collection in collections -%}
+    {%- if collection.products.first != blank and product == blank -%}
+      {%- assign product = collection.products.first -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
 <main class="product-section" id="productSection">
@@ -80,8 +87,12 @@
             <div class="bundle-card selected" data-bundle="1" data-qty="1" data-price="{% if current_variant.price %}{{ current_variant.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if current_variant.compare_at_price %}{{ current_variant.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
-                <div class="bundle-title">{{ section.settings.bundle_1_title }}</div>
-                <div class="bundle-sub">{{ section.settings.bundle_1_sub }}</div>
+                <div class="bundle-title-row">
+                  <span class="bundle-title">{{ section.settings.bundle_1_title }}</span>
+                </div>
+                {%- if section.settings.bundle_1_sub != blank -%}
+                  <div class="bundle-sub">{{ section.settings.bundle_1_sub }}</div>
+                {%- endif -%}
               </div>
               <div class="bundle-pricing">
                 <div class="bundle-p">{{ section.settings.bundle_1_price }}</div>
@@ -90,11 +101,15 @@
             </div>
 
             <div class="bundle-card" data-bundle="2" data-qty="2" data-price="{{ section.settings.bundle_2_price }}" data-compare="{{ section.settings.bundle_2_compare }}" data-savings="{{ section.settings.bundle_2_save }}">
-              <div class="bundle-badge">MOST POPULAR • BEST DEAL</div>
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
-                <div class="bundle-title">{{ section.settings.bundle_2_title }}</div>
-                <div class="bundle-sub">{{ section.settings.bundle_2_sub }}</div>
+                <div class="bundle-title-row">
+                  <span class="bundle-title">{{ section.settings.bundle_2_title }}</span>
+                  <span class="bundle-badge-inline">BEST DEAL</span>
+                </div>
+                {%- if section.settings.bundle_2_sub != blank -%}
+                  <div class="bundle-sub">{{ section.settings.bundle_2_sub }}</div>
+                {%- endif -%}
               </div>
               <div class="bundle-pricing">
                 <div class="bundle-p">{{ section.settings.bundle_2_price }}</div>
@@ -103,11 +118,15 @@
             </div>
 
             <div class="bundle-card" data-bundle="3" data-qty="3" data-price="{{ section.settings.bundle_3_price }}" data-compare="{{ section.settings.bundle_3_compare }}" data-savings="{{ section.settings.bundle_3_save }}">
-              <div class="bundle-badge family-badge">BUY 2 GET 1 FREE</div>
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
-                <div class="bundle-title">{{ section.settings.bundle_3_title }}</div>
-                <div class="bundle-sub">{{ section.settings.bundle_3_sub }}</div>
+                <div class="bundle-title-row">
+                  <span class="bundle-title">{{ section.settings.bundle_3_title }}</span>
+                  <span class="bundle-badge-inline family">SAVE MAX</span>
+                </div>
+                {%- if section.settings.bundle_3_sub != blank -%}
+                  <div class="bundle-sub">{{ section.settings.bundle_3_sub }}</div>
+                {%- endif -%}
               </div>
               <div class="bundle-pricing">
                 <div class="bundle-p">{{ section.settings.bundle_3_price }}</div>

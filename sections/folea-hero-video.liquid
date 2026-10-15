@@ -3,11 +3,11 @@
     {%- if section.settings.video != blank -%}
       {{ section.settings.video | video_tag: autoplay: true, loop: section.settings.enable_loop, muted: true, controls: false, playsinline: true, class: 'bg-video', id: 'heroBgVideo' }}
     {%- elsif section.settings.video_url != blank -%}
-      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline webkit-playsinline preload="auto" disablepictureinpicture poster="{% if section.settings.fallback_image != blank %}{{ section.settings.fallback_image | image_url: width: 1200 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
+      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline webkit-playsinline preload="auto" disablepictureinpicture {% if section.settings.fallback_image != blank %}poster="{{ section.settings.fallback_image | image_url: width: 1200 }}"{% endif %}>
         <source src="{{ section.settings.video_url }}" type="video/mp4">
       </video>
     {%- else -%}
-      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline webkit-playsinline preload="auto" disablepictureinpicture poster="{{ 'folea-texture.jpg' | asset_url }}">
+      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline webkit-playsinline preload="auto" disablepictureinpicture {% if section.settings.fallback_image != blank %}poster="{{ section.settings.fallback_image | image_url: width: 1200 }}"{% endif %}>
         <source src="{{ 'folea-hero-video.mp4' | asset_url }}" type="video/mp4">
       </video>
     {%- endif -%}
