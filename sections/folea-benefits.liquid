@@ -1,4 +1,4 @@
-<section class="benefits-section">
+<section class="benefits-section" id="benefitsSection">
   <div class="container">
     <div class="section-heading text-center">
       <span class="sub-heading">{{ section.settings.sub_heading }}</span>
@@ -9,10 +9,16 @@
     <div class="benefits-grid">
       {%- for block in section.blocks -%}
         <div class="benefit-card" {{ block.shopify_attributes }}>
-          <div class="benefit-num">0{{ forloop.index }}</div>
-          <div class="benefit-icon">{{ block.settings.icon }}</div>
-          <h3>{{ block.settings.title }}</h3>
-          <p>{{ block.settings.desc }}</p>
+          <div class="benefit-icon-badge">
+            <span class="benefit-icon">{{ block.settings.icon }}</span>
+          </div>
+          <div class="benefit-info">
+            <div class="benefit-card-header">
+              <h3>{{ block.settings.title }}</h3>
+              <span class="benefit-num">0{{ forloop.index }}</span>
+            </div>
+            <p>{{ block.settings.desc }}</p>
+          </div>
         </div>
       {%- endfor -%}
     </div>

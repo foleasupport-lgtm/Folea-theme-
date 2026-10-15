@@ -1,4 +1,4 @@
-<section class="ritual-section">
+<section class="ritual-section" id="ritualSection">
   <div class="container">
     <div class="section-heading text-center">
       <span class="sub-heading">{{ section.settings.sub_heading }}</span>
@@ -9,18 +9,24 @@
     <div class="ritual-steps-grid">
       <div class="ritual-step">
         <div class="step-circle">1</div>
-        <h4>{{ section.settings.step_1_title }}</h4>
-        <p>{{ section.settings.step_1_desc }}</p>
+        <div class="step-body">
+          <h4>{{ section.settings.step_1_title }}</h4>
+          <p>{{ section.settings.step_1_desc }}</p>
+        </div>
       </div>
       <div class="ritual-step">
         <div class="step-circle">2</div>
-        <h4>{{ section.settings.step_2_title }}</h4>
-        <p>{{ section.settings.step_2_desc }}</p>
+        <div class="step-body">
+          <h4>{{ section.settings.step_2_title }}</h4>
+          <p>{{ section.settings.step_2_desc }}</p>
+        </div>
       </div>
       <div class="ritual-step">
         <div class="step-circle">3</div>
-        <h4>{{ section.settings.step_3_title }}</h4>
-        <p>{{ section.settings.step_3_desc }}</p>
+        <div class="step-body">
+          <h4>{{ section.settings.step_3_title }}</h4>
+          <p>{{ section.settings.step_3_desc }}</p>
+        </div>
       </div>
     </div>
   </div>

@@ -3,11 +3,11 @@
     {%- if section.settings.video != blank -%}
       {{ section.settings.video | video_tag: autoplay: true, loop: section.settings.enable_loop, muted: true, controls: false, playsinline: true, class: 'bg-video', id: 'heroBgVideo' }}
     {%- elsif section.settings.video_url != blank -%}
-      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline poster="{% if section.settings.fallback_image != blank %}{{ section.settings.fallback_image | image_url: width: 1200 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
+      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline webkit-playsinline preload="auto" disablepictureinpicture poster="{% if section.settings.fallback_image != blank %}{{ section.settings.fallback_image | image_url: width: 1200 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
         <source src="{{ section.settings.video_url }}" type="video/mp4">
       </video>
     {%- else -%}
-      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline poster="{{ 'folea-texture.jpg' | asset_url }}">
+      <video class="bg-video" id="heroBgVideo" autoplay {% if section.settings.enable_loop %}loop{% endif %} muted playsinline webkit-playsinline preload="auto" disablepictureinpicture poster="{{ 'folea-texture.jpg' | asset_url }}">
         <source src="{{ 'folea-hero-video.mp4' | asset_url }}" type="video/mp4">
       </video>
     {%- endif -%}
@@ -31,16 +31,50 @@
 </section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var heroVideo = document.getElementById('heroBgVideo');
-    if (heroVideo) {
-      heroVideo.play().catch(function() {});
-      // Freeze smoothly on the final frame when video finishes
+  (function() {
+    function initHeroVideo() {
+      var heroVideo = document.getElementById('heroBgVideo');
+      if (!heroVideo) return;
+      heroVideo.muted = true;
+      heroVideo.defaultMuted = true;
+      heroVideo.setAttribute('playsinline', '');
+      heroVideo.setAttribute('webkit-playsinline', '');
+
+      var playVideo = function() {
+        var promise = heroVideo.play();
+        if (promise !== undefined) {
+          promise.catch(function() {
+            var startOnInteraction = function() {
+              heroVideo.play().catch(function() {});
+              ['touchstart', 'click', 'scroll'].forEach(function(evt) {
+                document.removeEventListener(evt, startOnInteraction);
+              });
+            };
+            ['touchstart', 'click', 'scroll'].forEach(function(evt) {
+              document.addEventListener(evt, startOnInteraction, { passive: true, once: true });
+            });
+          });
+        }
+      };
+
+      playVideo();
+
       heroVideo.addEventListener('ended', function() {
-        heroVideo.pause();
+        {% if section.settings.enable_loop %}
+          heroVideo.currentTime = 0;
+          heroVideo.play().catch(function() {});
+        {% else %}
+          heroVideo.pause();
+        {% endif %}
       });
     }
-  });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeroVideo);
+    } else {
+      initHeroVideo();
+    }
+  })();
 </script>
 
 {% schema %}
