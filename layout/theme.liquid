@@ -27,6 +27,20 @@
 
     {{ 'folea-theme.css' | asset_url | stylesheet_tag }}
     {{ content_for_header }}
+
+    <script>
+      // Enforce clean start at top on every page load and refresh (Safari & Chrome)
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      if (window.location.hash) {
+        history.replaceState(null, null, window.location.pathname + window.location.search);
+        window.scrollTo(0, 0);
+      }
+    </script>
   </head>
 
   <body class="folea-theme-body template-{{ template.name }}">

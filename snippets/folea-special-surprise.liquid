@@ -549,17 +549,27 @@
     }
     if (replayBtn) replayBtn.addEventListener('click', openSurprise);
 
-    // Scroll Trigger: When visitor scrolls down to Folea bottle section
+    // Scroll Trigger: When visitor scrolls down from top banner to Folea bottle section
     function setupScrollTrigger() {
       var target = document.getElementById('productSection') || document.querySelector('.product-section');
       if (!target) return;
 
+      var hasScrolledDown = false;
+      function checkUserScroll() {
+        if (window.scrollY > 120) {
+          hasScrolledDown = true;
+        }
+      }
+      window.addEventListener('scroll', checkUserScroll, { passive: true });
+
       var observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
-          if (entry.isIntersecting && !hasTriggered) {
+          // MUST be intersecting AND visitor must have scrolled down from the top banner
+          if (entry.isIntersecting && !hasTriggered && (hasScrolledDown || window.scrollY > 120)) {
             hasTriggered = true;
-            // Short 300ms pause so she sees the bottle first, then BAM celebration!
-            setTimeout(openSurprise, 350);
+            window.removeEventListener('scroll', checkUserScroll);
+            // Short pause so she sees the bottle first, then BAM celebration!
+            setTimeout(openSurprise, 400);
             observer.disconnect();
           }
         });

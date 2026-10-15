@@ -575,6 +575,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Smooth anchor navigation without polluting URL hash (prevents jumping on reload)
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href && href.length > 1 && href.startsWith('#')) {
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
   // Load initial cart count
   fetchCartData();
+});
+
+// Force top on pageshow / bfcache restore
+window.addEventListener('pageshow', function() {
+  window.scrollTo(0, 0);
 });
