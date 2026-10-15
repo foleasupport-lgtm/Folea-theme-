@@ -539,14 +539,47 @@ a {
   pointer-events: none;
 }
 
-.bg-video::-webkit-media-controls,
-.bg-video::-webkit-media-controls-panel,
-.bg-video::-webkit-media-controls-play-button,
-.bg-video::-webkit-media-controls-start-playback-button,
-.bg-video::-webkit-media-controls-overlay-play-button,
-.bg-video::-webkit-media-controls-status-display,
-.bg-video::-webkit-media-controls-current-time-display,
-.bg-video::-webkit-media-controls-time-remaining-display {
+.bg-video::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.bg-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.bg-video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.bg-video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+video::-webkit-media-controls {
   display: none !important;
   -webkit-appearance: none !important;
   opacity: 0 !important;

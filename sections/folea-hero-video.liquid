@@ -1,13 +1,67 @@
+<style>
+  /* Critical immediate WebKit / Safari media control suppression */
+  #heroBgVideo {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+  #heroBgVideo.is-playing,
+  #heroBgVideo.is-ready {
+    opacity: 1 !important;
+  }
+  #heroBgVideo::-webkit-media-controls {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  #heroBgVideo::-webkit-media-controls-start-playback-button {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  #heroBgVideo::-webkit-media-controls-play-button {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  #heroBgVideo::-webkit-media-controls-panel {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  video::-webkit-media-controls {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+</style>
+
 <section class="hero-video-section">
-  <div class="video-container">
+  <div class="video-container" style="background: #0D0C0B;">
     {%- if section.settings.video != blank -%}
       {{ section.settings.video | video_tag: autoplay: true, loop: false, muted: true, controls: false, playsinline: true, class: 'bg-video', id: 'heroBgVideo' }}
     {%- elsif section.settings.video_url != blank -%}
-      <video class="bg-video" id="heroBgVideo" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback" tabindex="-1">
+      <video class="bg-video" id="heroBgVideo" autoplay muted="muted" playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback" tabindex="-1">
         <source src="{{ section.settings.video_url }}" type="video/mp4">
       </video>
     {%- else -%}
-      <video class="bg-video" id="heroBgVideo" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback" tabindex="-1">
+      <video class="bg-video" id="heroBgVideo" autoplay muted="muted" playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback" tabindex="-1">
         <source src="{{ 'folea-hero-video.mp4' | asset_url }}" type="video/mp4">
       </video>
     {%- endif -%}
@@ -43,6 +97,10 @@
       heroVideo.setAttribute('playsinline', '');
       heroVideo.setAttribute('webkit-playsinline', '');
 
+      var revealVideo = function() {
+        heroVideo.classList.add('is-playing');
+      };
+
       // Freeze on final frame (Folea bottle and branding)
       var freezeOnFinalFrame = function() {
         heroVideo.pause();
@@ -52,7 +110,11 @@
       };
 
       heroVideo.addEventListener('ended', freezeOnFinalFrame);
+      heroVideo.addEventListener('playing', revealVideo);
       heroVideo.addEventListener('timeupdate', function() {
+        if (heroVideo.currentTime > 0.05) {
+          revealVideo();
+        }
         if (heroVideo.duration && heroVideo.currentTime >= heroVideo.duration - 0.1) {
           freezeOnFinalFrame();
         }
@@ -63,7 +125,9 @@
         heroVideo.defaultMuted = true;
         var promise = heroVideo.play();
         if (promise !== undefined) {
-          promise.catch(function() {
+          promise.then(function() {
+            revealVideo();
+          }).catch(function() {
             // Handled via user tap unlock
           });
         }
@@ -73,6 +137,9 @@
       heroVideo.addEventListener('canplay', playVideo);
       heroVideo.addEventListener('canplaythrough', playVideo);
       playVideo();
+
+      // Fallback reveal in case browser delays playing event
+      setTimeout(revealVideo, 400);
 
       // Immediate tap/touch unlock anywhere on the hero banner
       var heroSection = document.querySelector('.hero-video-section');
