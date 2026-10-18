@@ -592,8 +592,3 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load initial cart count
   fetchCartData();
 });
-
-// Force top on pageshow / bfcache restore
-window.addEventListener('pageshow', function() {
-  window.scrollTo(0, 0);
-});
