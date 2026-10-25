@@ -1,17 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero_video": {
       "type": "folea-hero-video",
       "settings": {
+        "enable_loop": false,
+        "video_url": "",
+        "overlay_opacity": 55,
+        "badge": "PAKISTAN'S #1 ANTI-FRIZZ FORMULA",
         "title": "Effortless Frizz-Free Shine.",
         "subtitle": "Engineered for humid weather, hard water & daily heat styling.",
-        "overlay_opacity": 55,
-        "show_scroll_btn": true
+        "show_scroll_btn": true,
+        "scroll_btn_text": "Explore The Ritual"
       }
     },
     "main_product": {
       "type": "folea-product",
       "settings": {
+        "featured_product": "",
         "product_title": "Anti-Frizz Hair Serum",
         "product_meta": "50 ml ℮ 1.69 fl. oz • Lightweight Glass Hair Finish",
         "sale_badge_text": "SALE • SAVE 33%",
@@ -19,15 +33,22 @@
         "rating_count": "1,240+ Verified Reviews",
         "stock_left": "14",
         "bundle_1_title": "Buy 1 Bottle (Starter Pack)",
+        "bundle_1_sub": "Ideal for 30 days daily styling",
         "bundle_1_price": "Rs. 1,999",
         "bundle_1_compare": "Rs. 2,999",
+        "bundle_1_save": "SAVE RS. 1,000",
         "bundle_2_title": "Buy 2 Bottles (Couple / Bestie Pack)",
+        "bundle_2_sub": "Free Nationwide Express Delivery included",
         "bundle_2_price": "Rs. 3,599",
         "bundle_2_compare": "Rs. 5,998",
+        "bundle_2_save": "SAVE EXTRA RS. 400 + FREE DELIVERY",
         "bundle_3_title": "Buy 3 Bottles (Family Pack)",
+        "bundle_3_sub": "1 Bottle completely FREE + VIP Gift Bag",
         "bundle_3_price": "Rs. 4,999",
         "bundle_3_compare": "Rs. 8,997",
-        "cta_button_text": "ORDER VIA CASH ON DELIVERY"
+        "bundle_3_save": "BUY 2 GET 1 FREE",
+        "cta_button_text": "ORDER VIA CASH ON DELIVERY",
+        "cta_subtext": "Pay at doorstep • Delivery in 2 to 4 Days"
       }
     },
     "benefits_grid": {
@@ -74,29 +95,46 @@
       ],
       "settings": {
         "sub_heading": "DESIGNED FOR YOU",
-        "title": "Why Hair Loves Folea"
+        "title": "Why Hair Loves Folea",
+        "desc": "Formulated specifically for high humidity, dry blowouts, and chemically treated hair."
       }
     },
     "transformation_results": {
       "type": "folea-results",
       "settings": {
+        "sub_heading": "CLINICALLY OBSERVED",
         "title": "Visible Results From Pump 01.",
+        "lead": "Say goodbye to dry, brittle, unmanageable hair. One pump transforms texture instantly without weighing hair down.",
         "stat_1_num": "97%",
+        "stat_1_label": "Reported instant frizz reduction",
         "stat_2_num": "94%",
-        "stat_3_num": "3x"
+        "stat_2_label": "Noticed mirror-like shine without greasiness",
+        "stat_3_num": "3x",
+        "stat_3_label": "Faster detangling & blowout time",
+        "cta_link_text": "Claim Your Bottle Today"
       }
     },
     "formula_shipping": {
       "type": "folea-formula",
       "settings": {
+        "formula_tag": "FORMULATION TRANSPARENCY",
         "formula_title": "Key Active Ingredients",
+        "shipping_tag": "ORDER & DELIVERY",
         "shipping_title": "Nationwide Shipping & Returns"
       }
     },
     "three_step_ritual": {
       "type": "folea-ritual",
       "settings": {
-        "title": "The 3-Step Folea Ritual"
+        "sub_heading": "HOW TO USE",
+        "title": "The 3-Step Folea Ritual",
+        "desc": "Less is more. A small pump goes a long way.",
+        "step_1_title": "Dispense",
+        "step_1_desc": "Press 1 to 2 pumps of serum onto your clean palm. (Start with 1 pump for fine hair).",
+        "step_2_title": "Warm & Activate",
+        "step_2_desc": "Rub hands gently together for 3 seconds to warm and evenly distribute the botanical oils.",
+        "step_3_title": "Glide & Gloss",
+        "step_3_desc": "Finger-comb through towel-dried or dry hair from mid-lengths to ends. Style as desired."
       }
     },
     "ugc_video_reviews": {
@@ -105,6 +143,7 @@
         "ugc_1": {
           "type": "video_card",
           "settings": {
+            "video": "shopify://files/videos/AdLibNote_BuyHut.pk_1303011031686566_adstart-2026-03-30_creative-01_video.mp4",
             "author_name": "Zoya K.",
             "author_city": "Lahore • Verified Buyer",
             "caption": "My holy grail for Karachi humidity. Not sticky at all!"
@@ -142,7 +181,9 @@
         "ugc_4"
       ],
       "settings": {
-        "title": "Customer Video Reactions"
+        "sub_heading": "REAL EXPERIENCES",
+        "title": "Customer Video Reactions",
+        "desc": "See real Pakistani women test Folea Anti-Frizz Serum on live camera."
       }
     },
     "customer_reviews": {
@@ -185,7 +226,10 @@
         "rev_3"
       ],
       "settings": {
-        "title": "Loved by Thousands Nationwide"
+        "sub_heading": "HONEST FEEDBACK",
+        "title": "Loved by Thousands Nationwide",
+        "score": "4.9",
+        "score_desc": "Based on 1,240+ verified Pakistani customers"
       }
     },
     "faq_accordion": {
@@ -235,6 +279,7 @@
         "faq_5"
       ],
       "settings": {
+        "sub_heading": "HAVE QUESTIONS?",
         "title": "Frequently Asked Questions"
       }
     }
