@@ -877,6 +877,25 @@ video::-webkit-media-controls {
   margin-bottom: 16px;
 }
 
+.product-custom-liquid-slot,
+.product-custom-liquid-block {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 10px 0;
+  position: relative;
+}
+
+.product-custom-liquid-slot img,
+.product-custom-liquid-block img,
+.product-custom-liquid-slot video,
+.product-custom-liquid-block video,
+.product-custom-liquid-slot iframe,
+.product-custom-liquid-block iframe {
+  max-width: 100%;
+  height: auto;
+}
+
 .price-row {
   display: flex;
   align-items: center;

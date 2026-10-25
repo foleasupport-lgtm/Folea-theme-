@@ -101,6 +101,20 @@
         <h2 class="product-title">{% if product.title != blank %}{{ product.title }}{% else %}{{ section.settings.product_title }}{% endif %}</h2>
         <div class="product-meta">{{ section.settings.product_meta }}</div>
 
+        {%- if section.settings.custom_liquid_below_title != blank -%}
+          <div class="product-custom-liquid-slot">
+            {{ section.settings.custom_liquid_below_title }}
+          </div>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'custom_liquid' and block.settings.position == 'below_title' -%}
+            <div class="product-custom-liquid-block" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
         <div class="price-row">
           <span class="current-price" id="displayPrice">
             {%- if product.variants.size >= 1 and v1.price -%}
@@ -119,10 +133,26 @@
           <span class="discount-pill" id="displayDiscount">{{ section.settings.bundle_1_save }}</span>
         </div>
 
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'custom_liquid' and block.settings.position == 'below_price' -%}
+            <div class="product-custom-liquid-block" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
         <div class="urgency-banner">
           <span class="flame-icon">{{ section.settings.urgency_icon | default: '🔥' }}</span>
           <span>{{ section.settings.urgency_prefix | default: 'High Demand: Only' }} <strong class="pulse-num">{{ section.settings.stock_left | default: '14' }} {{ section.settings.urgency_unit | default: 'bottles' }}</strong> {{ section.settings.urgency_suffix | default: 'left in this batch.' }}</span>
         </div>
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'custom_liquid' and block.settings.position == 'below_urgency' -%}
+            <div class="product-custom-liquid-block" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
 
         <!-- REAL SHOPIFY BACKEND FORM -->
         <form method="post" action="/cart/add" id="foleaProductForm" enctype="multipart/form-data" class="folea-native-form">
@@ -191,6 +221,14 @@
             </div>
           </div>
 
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'custom_liquid' and block.settings.position == 'below_bundles' -%}
+              <div class="product-custom-liquid-block" {{ block.shopify_attributes }}>
+                {{ block.settings.custom_liquid }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
           <!-- Quantity Selector -->
           <div class="qty-and-action-row">
             <span class="qty-label">Quantity:</span>
@@ -226,6 +264,14 @@
             </button>
           </div>
         </form>
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'custom_liquid' and block.settings.position == 'below_buttons' -%}
+            <div class="product-custom-liquid-block" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
 
         <script id="foleaProductCatalog" type="application/json">
         {
@@ -268,6 +314,14 @@
             <div class="trust-desc">{{ section.settings.trust_4_desc | default: 'No Parabens or Alcohol' }}</div>
           </div>
         </div>
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'custom_liquid' and block.settings.position == 'below_trust' -%}
+            <div class="product-custom-liquid-block" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
 
         <!-- Dynamic Live Shopify Description -->
         {%- if product.description != blank -%}
@@ -338,6 +392,12 @@
       "id": "product_meta",
       "label": "Product Subtitle / Size",
       "default": "50 ml ℮ 1.69 fl. oz • Lightweight Glass Hair Finish"
+    },
+    {
+      "type": "liquid",
+      "id": "custom_liquid_below_title",
+      "label": "Custom Liquid (Below Title & Subtitle)",
+      "info": "Paste any custom Liquid code, HTML, badge, or animation directly below the title."
     },
     {
       "type": "text",
@@ -677,6 +737,34 @@
       "type": "image_picker",
       "id": "custom_image_3",
       "label": "Product Photo 3 (Results)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid Block",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom Liquid / HTML Code",
+          "info": "Paste any Liquid, HTML, CSS, JavaScript, animation, or badge code."
+        },
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Placement Position",
+          "default": "below_title",
+          "options": [
+            { "value": "below_title", "label": "Below Title & Subtitle" },
+            { "value": "below_price", "label": "Below Price & Discount Pill" },
+            { "value": "below_urgency", "label": "Below Urgency Stock Banner" },
+            { "value": "below_bundles", "label": "Below Bundle Selector" },
+            { "value": "below_buttons", "label": "Below Order COD Buttons" },
+            { "value": "below_trust", "label": "Below Trust Badges" }
+          ]
+        }
+      ]
     }
   ],
   "presets": [
