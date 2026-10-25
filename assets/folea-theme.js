@@ -747,20 +747,81 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ----------------------------------------------------
-  // 8. UGC Video Reviews Interactive Player (Sound + Click Play)
+  // 8. UGC Video Reviews Interactive Player (Immediate Audio + Responsive Play/Pause/Resume)
   // ----------------------------------------------------
   const ugcCards = document.querySelectorAll('.ugc-card');
   const allUgcVideos = document.querySelectorAll('.ugc-native-video');
+  let currentPlayingVideo = null;
+
+  async function toggleUgcVideo(card, thumb, video) {
+    if (!video) return;
+
+    const playIcon = card.querySelector('.play-icon');
+    const pauseIcon = card.querySelector('.pause-icon');
+
+    // If currently paused, PLAY / RESUME
+    if (video.paused || video.ended) {
+      // Pause any other playing video in the carousel
+      allUgcVideos.forEach(v => {
+        if (v !== video && !v.paused) {
+          try {
+            v.pause();
+          } catch (e) {}
+          const pThumb = v.closest('.ugc-thumb');
+          if (pThumb) {
+            pThumb.classList.remove('is-playing');
+            const pi = pThumb.querySelector('.play-icon');
+            const pau = pThumb.querySelector('.pause-icon');
+            if (pi) pi.style.display = 'inline';
+            if (pau) pau.style.display = 'none';
+          }
+        }
+      });
+
+      // Always ensure sound is enabled on user tap
+      video.muted = false;
+      video.volume = 1.0;
+
+      try {
+        await video.play();
+        currentPlayingVideo = video;
+        thumb.classList.add('is-playing');
+        if (playIcon) playIcon.style.display = 'none';
+        if (pauseIcon) pauseIcon.style.display = 'inline';
+      } catch (err) {
+        console.warn('Initial sound play restricted by browser, retrying:', err);
+        video.muted = true;
+        try {
+          await video.play();
+          video.muted = false; // Immediately unmute once playing
+          currentPlayingVideo = video;
+          thumb.classList.add('is-playing');
+          if (playIcon) playIcon.style.display = 'none';
+          if (pauseIcon) pauseIcon.style.display = 'inline';
+        } catch (e) {
+          console.error('Video play failed:', e);
+        }
+      }
+    } else {
+      // If currently playing, PAUSE cleanly
+      try {
+        video.pause();
+      } catch (e) {}
+      if (currentPlayingVideo === video) currentPlayingVideo = null;
+      thumb.classList.remove('is-playing');
+      if (playIcon) playIcon.style.display = 'inline';
+      if (pauseIcon) pauseIcon.style.display = 'none';
+    }
+  }
 
   ugcCards.forEach(card => {
     const thumb = card.querySelector('.ugc-thumb');
     const video = card.querySelector('.ugc-native-video');
-    const soundToggle = card.querySelector('.ugc-sound-toggle');
+    const progressBar = card.querySelector('.ugc-progress-bar');
     const playIcon = card.querySelector('.play-icon');
     const pauseIcon = card.querySelector('.pause-icon');
-    const progressBar = card.querySelector('.ugc-progress-bar');
 
-    if (!video) return;
+    if (!video || !thumb) return;
 
     // Timeupdate for progress bar
     video.addEventListener('timeupdate', () => {
@@ -770,64 +831,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Sound toggle listener
-    if (soundToggle) {
-      soundToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        video.muted = !video.muted;
-        const unmutedIcon = soundToggle.querySelector('.sound-icon-unmuted');
-        const mutedIcon = soundToggle.querySelector('.sound-icon-muted');
-        if (unmutedIcon && mutedIcon) {
-          unmutedIcon.style.display = video.muted ? 'none' : 'inline';
-          mutedIcon.style.display = video.muted ? 'inline' : 'none';
-        }
-      });
-    }
+    // Reset when video ends
+    video.addEventListener('ended', () => {
+      thumb.classList.remove('is-playing');
+      if (playIcon) playIcon.style.display = 'inline';
+      if (pauseIcon) pauseIcon.style.display = 'none';
+      if (progressBar) progressBar.style.width = '0%';
+    });
 
-    // Click/tap on thumb to play/pause with audio
-    if (thumb) {
-      thumb.addEventListener('click', async (e) => {
-        if (e.target.closest('.ugc-sound-toggle')) return;
+    // Touch & click handling (differentiates swipe scrolling from tapping)
+    let touchMoved = false;
+    let touchStartTime = 0;
 
-        if (video.paused) {
-          // Pause all other playing videos
-          allUgcVideos.forEach(v => {
-            if (v !== video && !v.paused) {
-              v.pause();
-              const pThumb = v.closest('.ugc-thumb');
-              if (pThumb) {
-                pThumb.classList.remove('is-playing');
-                const pi = pThumb.querySelector('.play-icon');
-                const pau = pThumb.querySelector('.pause-icon');
-                if (pi) pi.style.display = 'inline';
-                if (pau) pau.style.display = 'none';
-              }
-            }
-          });
+    thumb.addEventListener('touchstart', () => {
+      touchMoved = false;
+      touchStartTime = Date.now();
+    }, { passive: true });
 
-          // Unmute on explicit user click so sound is heard
-          video.muted = false;
-          try {
-            await video.play();
-            thumb.classList.add('is-playing');
-            if (playIcon) playIcon.style.display = 'none';
-            if (pauseIcon) pauseIcon.style.display = 'inline';
-          } catch (err) {
-            console.warn('Autoplay with sound restricted, playing muted:', err);
-            video.muted = true;
-            await video.play();
-            thumb.classList.add('is-playing');
-            if (playIcon) playIcon.style.display = 'none';
-            if (pauseIcon) pauseIcon.style.display = 'inline';
-          }
-        } else {
-          video.pause();
-          thumb.classList.remove('is-playing');
-          if (playIcon) playIcon.style.display = 'inline';
-          if (pauseIcon) pauseIcon.style.display = 'none';
-        }
-      });
-    }
+    thumb.addEventListener('touchmove', () => {
+      touchMoved = true;
+    }, { passive: true });
+
+    thumb.addEventListener('touchend', (e) => {
+      // If user was swiping the carousel, do not trigger play/pause
+      if (touchMoved || (Date.now() - touchStartTime > 350)) return;
+      e.preventDefault();
+      toggleUgcVideo(card, thumb, video);
+    });
+
+    thumb.addEventListener('click', () => {
+      // For desktop pointer clicks
+      toggleUgcVideo(card, thumb, video);
+    });
   });
 
   // Load initial cart count
