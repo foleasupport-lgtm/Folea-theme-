@@ -746,6 +746,90 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ----------------------------------------------------
+  // 8. UGC Video Reviews Interactive Player (Sound + Click Play)
+  // ----------------------------------------------------
+  const ugcCards = document.querySelectorAll('.ugc-card');
+  const allUgcVideos = document.querySelectorAll('.ugc-native-video');
+
+  ugcCards.forEach(card => {
+    const thumb = card.querySelector('.ugc-thumb');
+    const video = card.querySelector('.ugc-native-video');
+    const soundToggle = card.querySelector('.ugc-sound-toggle');
+    const playIcon = card.querySelector('.play-icon');
+    const pauseIcon = card.querySelector('.pause-icon');
+    const progressBar = card.querySelector('.ugc-progress-bar');
+
+    if (!video) return;
+
+    // Timeupdate for progress bar
+    video.addEventListener('timeupdate', () => {
+      if (progressBar && video.duration) {
+        const pct = (video.currentTime / video.duration) * 100;
+        progressBar.style.width = `${pct}%`;
+      }
+    });
+
+    // Sound toggle listener
+    if (soundToggle) {
+      soundToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        video.muted = !video.muted;
+        const unmutedIcon = soundToggle.querySelector('.sound-icon-unmuted');
+        const mutedIcon = soundToggle.querySelector('.sound-icon-muted');
+        if (unmutedIcon && mutedIcon) {
+          unmutedIcon.style.display = video.muted ? 'none' : 'inline';
+          mutedIcon.style.display = video.muted ? 'inline' : 'none';
+        }
+      });
+    }
+
+    // Click/tap on thumb to play/pause with audio
+    if (thumb) {
+      thumb.addEventListener('click', async (e) => {
+        if (e.target.closest('.ugc-sound-toggle')) return;
+
+        if (video.paused) {
+          // Pause all other playing videos
+          allUgcVideos.forEach(v => {
+            if (v !== video && !v.paused) {
+              v.pause();
+              const pThumb = v.closest('.ugc-thumb');
+              if (pThumb) {
+                pThumb.classList.remove('is-playing');
+                const pi = pThumb.querySelector('.play-icon');
+                const pau = pThumb.querySelector('.pause-icon');
+                if (pi) pi.style.display = 'inline';
+                if (pau) pau.style.display = 'none';
+              }
+            }
+          });
+
+          // Unmute on explicit user click so sound is heard
+          video.muted = false;
+          try {
+            await video.play();
+            thumb.classList.add('is-playing');
+            if (playIcon) playIcon.style.display = 'none';
+            if (pauseIcon) pauseIcon.style.display = 'inline';
+          } catch (err) {
+            console.warn('Autoplay with sound restricted, playing muted:', err);
+            video.muted = true;
+            await video.play();
+            thumb.classList.add('is-playing');
+            if (playIcon) playIcon.style.display = 'none';
+            if (pauseIcon) pauseIcon.style.display = 'inline';
+          }
+        } else {
+          video.pause();
+          thumb.classList.remove('is-playing');
+          if (playIcon) playIcon.style.display = 'inline';
+          if (pauseIcon) pauseIcon.style.display = 'none';
+        }
+      });
+    }
+  });
+
   // Load initial cart count
   fetchCartData();
 });

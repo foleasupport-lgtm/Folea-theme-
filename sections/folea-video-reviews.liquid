@@ -10,17 +10,51 @@
       <div class="video-carousel" id="videoCarousel">
         {%- for block in section.blocks -%}
           <div class="ugc-card" {{ block.shopify_attributes }}>
-            <div class="ugc-thumb">
+            <div class="ugc-thumb" data-ugc-id="{{ block.id }}">
               {%- if block.settings.video != blank -%}
-                {{ block.settings.video | video_tag: autoplay: false, loop: true, controls: true, playsinline: true, class: 'ugc-native-video' }}
+                <video class="ugc-native-video" 
+                       playsinline 
+                       webkit-playsinline 
+                       preload="metadata" 
+                       loop 
+                       poster="{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 600 }}{% elsif block.settings.video.preview_image != blank %}{{ block.settings.video.preview_image | image_url: width: 600 }}{% endif %}">
+                  {%- for source in block.settings.video.sources -%}
+                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {%- endfor -%}
+                </video>
+              {%- elsif block.settings.video_url != blank -%}
+                <video class="ugc-native-video" 
+                       playsinline 
+                       webkit-playsinline 
+                       preload="metadata" 
+                       loop 
+                       src="{{ block.settings.video_url }}" 
+                       poster="{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 600 }}{% endif %}">
+                </video>
               {%- elsif block.settings.image != blank -%}
-                <img src="{{ block.settings.image | image_url: width: 480 }}" alt="{{ block.settings.author_name }}">
-                <div class="ugc-play-overlay"><span class="play-circle">▶</span></div>
+                <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.author_name }}" class="ugc-poster-img">
               {%- else -%}
-                <img src="{{ 'folea-ugc-1.jpg' | asset_url }}" alt="Review Video">
-                <div class="ugc-play-overlay"><span class="play-circle">▶</span></div>
+                <img src="{{ 'folea-ugc-1.jpg' | asset_url }}" alt="Review Video" class="ugc-poster-img">
               {%- endif -%}
 
+              <!-- Sound Toggle Button -->
+              <button type="button" class="ugc-sound-toggle" aria-label="Toggle Sound" title="Sound">
+                <span class="sound-icon-unmuted">🔊</span>
+                <span class="sound-icon-muted" style="display:none;">🔇</span>
+              </button>
+
+              <!-- Play / Pause Overlay Icon -->
+              <div class="ugc-play-overlay">
+                <span class="play-icon">▶</span>
+                <span class="pause-icon" style="display:none;">❚❚</span>
+              </div>
+
+              <!-- Real-time Progress Bar -->
+              <div class="ugc-progress-track">
+                <div class="ugc-progress-bar"></div>
+              </div>
+
+              <!-- Author Badge -->
               <div class="ugc-author-badge">
                 <div class="author-name">{{ block.settings.author_name }} <span class="badge-check">✓</span></div>
                 <div class="author-city">{{ block.settings.author_city }}</div>
@@ -68,12 +102,18 @@
         {
           "type": "video",
           "id": "video",
-          "label": "Shopify Video File (9:16)"
+          "label": "Shopify Video (Upload directly)"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Or Shopify MP4 URL (Content > Files link)",
+          "info": "Shopify Admin > Content > Files se direct MP4 link yahan paste kar sakte hain"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Poster / Cover Image"
+          "label": "Poster / Cover Image (Optional)"
         },
         {
           "type": "text",
