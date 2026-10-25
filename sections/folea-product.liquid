@@ -57,26 +57,37 @@
     <div class="product-grid">
       
       <!-- Left: Product Media Gallery -->
-      <!-- Left: Product Media Gallery (100% Dynamic from Shopify Admin) -->
       <div class="product-gallery">
         <div class="main-image-wrapper">
           <span class="sale-badge">{{ section.settings.sale_badge_text }}</span>
           {%- if product.featured_image != blank -%}
-            <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" id="mainProductImg" class="main-product-img">
+            <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}" id="mainProductImg" class="main-product-img">
+          {%- elsif section.settings.custom_image_1 != blank -%}
+            <img src="{{ section.settings.custom_image_1 | image_url: width: 800 }}" alt="Folea Bottle" id="mainProductImg" class="main-product-img">
           {%- else -%}
             <img src="{{ 'folea-bottle.jpg' | asset_url }}" alt="Folea Anti-Frizz Hair Serum" id="mainProductImg" class="main-product-img">
           {%- endif -%}
         </div>
 
-        {%- if product != blank and product.images.size > 1 -%}
-          <div class="thumb-strip" id="productThumbStrip">
+        <div class="thumb-strip" id="productThumbStrip">
+          {%- if product != blank and product.images.size > 0 -%}
             {%- for img in product.images -%}
               <button type="button" class="thumb-btn {% if forloop.first %}active{% endif %}" data-src="{{ img | image_url: width: 800 }}" aria-label="Product Image {{ forloop.index }}">
                 <img src="{{ img | image_url: width: 160 }}" alt="{{ img.alt | default: product.title | escape }}">
               </button>
             {%- endfor -%}
-          </div>
-        {%- endif -%}
+          {%- else -%}
+            <button type="button" class="thumb-btn active" data-src="{% if section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 800 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}">
+              <img src="{% if section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 160 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Front Bottle">
+            </button>
+            <button type="button" class="thumb-btn" data-src="{% if section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 800 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
+              <img src="{% if section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 160 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}" alt="Texture Detail">
+            </button>
+            <button type="button" class="thumb-btn" data-src="{% if section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 800 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}">
+              <img src="{% if section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 160 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}" alt="Transformation">
+            </button>
+          {%- endif -%}
+        </div>
       </div>
 
       <!-- Right: Product Buy Box & Backend Shopify Form -->
