@@ -6,16 +6,16 @@
         <h3>{{ section.settings.formula_title }}</h3>
         <ul class="ingredients-list">
           <li>
-            <strong>Moroccan Organic Argan Oil:</strong> Penetrates hair shafts to soften rough cuticles and seal split ends.
+            <strong>{{ section.settings.ing_1_name | default: 'Moroccan Organic Argan Oil:' }}</strong> {{ section.settings.ing_1_desc | default: 'Penetrates hair shafts to soften rough cuticles and seal split ends.' }}
           </li>
           <li>
-            <strong>Golden Jojoba Seed Oil:</strong> Mimics natural scalp lipids to restore elasticity without heaviness.
+            <strong>{{ section.settings.ing_2_name | default: 'Golden Jojoba Seed Oil:' }}</strong> {{ section.settings.ing_2_desc | default: 'Mimics natural scalp lipids to restore elasticity without heaviness.' }}
           </li>
           <li>
-            <strong>Hydrolyzed Silk Keratin:</strong> Strengthens weak strands exposed to dyes and environmental pollutants.
+            <strong>{{ section.settings.ing_3_name | default: 'Hydrolyzed Silk Keratin:' }}</strong> {{ section.settings.ing_3_desc | default: 'Strengthens weak strands exposed to dyes and environmental pollutants.' }}
           </li>
           <li>
-            <strong>Pure Alpha-Tocopherol (Vitamin E):</strong> Powerful antioxidant defense against UV and sun damage.
+            <strong>{{ section.settings.ing_4_name | default: 'Pure Alpha-Tocopherol (Vitamin E):' }}</strong> {{ section.settings.ing_4_desc | default: 'Powerful antioxidant defense against UV and sun damage.' }}
           </li>
         </ul>
       </div>
@@ -25,27 +25,27 @@
         <h3>{{ section.settings.shipping_title }}</h3>
         <div class="shipping-steps">
           <div class="ship-row">
-            <div class="ship-icon">📦</div>
+            <div class="ship-icon">{{ section.settings.ship_1_icon | default: '📦' }}</div>
             <div>
-              <strong>Same-Day Dispatch:</strong> Orders placed before 4 PM are packed and handed over to courier on the same day.
+              <strong>{{ section.settings.ship_1_title | default: 'Same-Day Dispatch:' }}</strong> {{ section.settings.ship_1_desc | default: 'Orders placed before 4 PM are packed and handed over to courier on the same day.' }}
             </div>
           </div>
           <div class="ship-row">
-            <div class="ship-icon">🚚</div>
+            <div class="ship-icon">{{ section.settings.ship_2_icon | default: '🚚' }}</div>
             <div>
-              <strong>Courier Partners:</strong> TCS, Leopards, and Trax with live SMS tracking sent to your WhatsApp.
+              <strong>{{ section.settings.ship_2_title | default: 'Courier Partners:' }}</strong> {{ section.settings.ship_2_desc | default: 'TCS, Leopards, and Trax with live SMS tracking sent to your WhatsApp.' }}
             </div>
           </div>
           <div class="ship-row">
-            <div class="ship-icon">💵</div>
+            <div class="ship-icon">{{ section.settings.ship_3_icon | default: '💵' }}</div>
             <div>
-              <strong>Cash on Delivery:</strong> Inspect the parcel upon arrival and hand over cash to the courier rider.
+              <strong>{{ section.settings.ship_3_title | default: 'Cash on Delivery:' }}</strong> {{ section.settings.ship_3_desc | default: 'Inspect the parcel upon arrival and hand over cash to the courier rider.' }}
             </div>
           </div>
           <div class="ship-row">
-            <div class="ship-icon">🔄</div>
+            <div class="ship-icon">{{ section.settings.ship_4_icon | default: '🔄' }}</div>
             <div>
-              <strong>7 Days Checking Warranty:</strong> Any damage or defect is replaced immediately with 0 extra charges.
+              <strong>{{ section.settings.ship_4_title | default: '7 Days Checking Warranty:' }}</strong> {{ section.settings.ship_4_desc | default: 'Any damage or defect is replaced immediately with 0 extra charges.' }}
             </div>
           </div>
         </div>
@@ -58,6 +58,10 @@
 {
   "name": "Folea Formula & Shipping",
   "settings": [
+    {
+      "type": "header",
+      "content": "Formula Box"
+    },
     {
       "type": "text",
       "id": "formula_tag",
@@ -72,6 +76,58 @@
     },
     {
       "type": "text",
+      "id": "ing_1_name",
+      "label": "Ingredient 1 Name",
+      "default": "Moroccan Organic Argan Oil:"
+    },
+    {
+      "type": "text",
+      "id": "ing_1_desc",
+      "label": "Ingredient 1 Description",
+      "default": "Penetrates hair shafts to soften rough cuticles and seal split ends."
+    },
+    {
+      "type": "text",
+      "id": "ing_2_name",
+      "label": "Ingredient 2 Name",
+      "default": "Golden Jojoba Seed Oil:"
+    },
+    {
+      "type": "text",
+      "id": "ing_2_desc",
+      "label": "Ingredient 2 Description",
+      "default": "Mimics natural scalp lipids to restore elasticity without heaviness."
+    },
+    {
+      "type": "text",
+      "id": "ing_3_name",
+      "label": "Ingredient 3 Name",
+      "default": "Hydrolyzed Silk Keratin:"
+    },
+    {
+      "type": "text",
+      "id": "ing_3_desc",
+      "label": "Ingredient 3 Description",
+      "default": "Strengthens weak strands exposed to dyes and environmental pollutants."
+    },
+    {
+      "type": "text",
+      "id": "ing_4_name",
+      "label": "Ingredient 4 Name",
+      "default": "Pure Alpha-Tocopherol (Vitamin E):"
+    },
+    {
+      "type": "text",
+      "id": "ing_4_desc",
+      "label": "Ingredient 4 Description",
+      "default": "Powerful antioxidant defense against UV and sun damage."
+    },
+    {
+      "type": "header",
+      "content": "Shipping & Guarantee Box"
+    },
+    {
+      "type": "text",
       "id": "shipping_tag",
       "label": "Shipping Badge",
       "default": "ORDER & DELIVERY"
@@ -81,6 +137,78 @@
       "id": "shipping_title",
       "label": "Shipping Title",
       "default": "Nationwide Shipping & Returns"
+    },
+    {
+      "type": "text",
+      "id": "ship_1_icon",
+      "label": "Step 1 Icon",
+      "default": "📦"
+    },
+    {
+      "type": "text",
+      "id": "ship_1_title",
+      "label": "Step 1 Title",
+      "default": "Same-Day Dispatch:"
+    },
+    {
+      "type": "text",
+      "id": "ship_1_desc",
+      "label": "Step 1 Description",
+      "default": "Orders placed before 4 PM are packed and handed over to courier on the same day."
+    },
+    {
+      "type": "text",
+      "id": "ship_2_icon",
+      "label": "Step 2 Icon",
+      "default": "🚚"
+    },
+    {
+      "type": "text",
+      "id": "ship_2_title",
+      "label": "Step 2 Title",
+      "default": "Courier Partners:"
+    },
+    {
+      "type": "text",
+      "id": "ship_2_desc",
+      "label": "Step 2 Description",
+      "default": "TCS, Leopards, and Trax with live SMS tracking sent to your WhatsApp."
+    },
+    {
+      "type": "text",
+      "id": "ship_3_icon",
+      "label": "Step 3 Icon",
+      "default": "💵"
+    },
+    {
+      "type": "text",
+      "id": "ship_3_title",
+      "label": "Step 3 Title",
+      "default": "Cash on Delivery:"
+    },
+    {
+      "type": "text",
+      "id": "ship_3_desc",
+      "label": "Step 3 Description",
+      "default": "Inspect the parcel upon arrival and hand over cash to the courier rider."
+    },
+    {
+      "type": "text",
+      "id": "ship_4_icon",
+      "label": "Step 4 Icon",
+      "default": "🔄"
+    },
+    {
+      "type": "text",
+      "id": "ship_4_title",
+      "label": "Step 4 Title",
+      "default": "7 Days Checking Warranty:"
+    },
+    {
+      "type": "text",
+      "id": "ship_4_desc",
+      "label": "Step 4 Description",
+      "default": "Any damage or defect is replaced immediately with 0 extra charges."
     }
   ],
   "presets": [

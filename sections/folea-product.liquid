@@ -120,8 +120,8 @@
         </div>
 
         <div class="urgency-banner">
-          <span class="flame-icon">🔥</span>
-          <span>High Demand: Only <strong class="pulse-num">{{ section.settings.stock_left }} bottles</strong> left in this batch.</span>
+          <span class="flame-icon">{{ section.settings.urgency_icon | default: '🔥' }}</span>
+          <span>{{ section.settings.urgency_prefix | default: 'High Demand: Only' }} <strong class="pulse-num">{{ section.settings.stock_left | default: '14' }} {{ section.settings.urgency_unit | default: 'bottles' }}</strong> {{ section.settings.urgency_suffix | default: 'left in this batch.' }}</span>
         </div>
 
         <!-- REAL SHOPIFY BACKEND FORM -->
@@ -131,13 +131,16 @@
 
           <!-- Bundle Selector (Synced with Shopify Quantity & Variants) -->
           <div class="bundle-selector">
-            <div class="bundle-header">SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):</div>
+            <div class="bundle-header">{{ section.settings.bundle_header_text | default: 'SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):' }}</div>
             
             <div class="bundle-card selected" data-bundle="1" data-variant-id="{{ v1_id }}" data-bottles="1" data-qty="1" data-price="{% if product.variants.size >= 1 and v1.price %}{{ v1.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if product.variants.size >= 1 and v1.compare_at_price %}{{ v1.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}" data-discount="{{ section.settings.bundle_1_discount_code | strip }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
                 <div class="bundle-title-row">
                   <span class="bundle-title">{{ section.settings.bundle_1_title }}</span>
+                  {%- if section.settings.bundle_1_badge != blank -%}
+                    <span class="bundle-badge-inline">{{ section.settings.bundle_1_badge }}</span>
+                  {%- endif -%}
                 </div>
                 {%- if section.settings.bundle_1_sub != blank -%}
                   <div class="bundle-sub">{{ section.settings.bundle_1_sub }}</div>
@@ -154,7 +157,9 @@
               <div class="bundle-info">
                 <div class="bundle-title-row">
                   <span class="bundle-title">{{ section.settings.bundle_2_title }}</span>
-                  <span class="bundle-badge-inline">BEST DEAL</span>
+                  {%- if section.settings.bundle_2_badge != blank -%}
+                    <span class="bundle-badge-inline">{{ section.settings.bundle_2_badge }}</span>
+                  {%- endif -%}
                 </div>
                 {%- if section.settings.bundle_2_sub != blank -%}
                   <div class="bundle-sub">{{ section.settings.bundle_2_sub }}</div>
@@ -171,7 +176,9 @@
               <div class="bundle-info">
                 <div class="bundle-title-row">
                   <span class="bundle-title">{{ section.settings.bundle_3_title }}</span>
-                  <span class="bundle-badge-inline family">SAVE MAX</span>
+                  {%- if section.settings.bundle_3_badge != blank -%}
+                    <span class="bundle-badge-inline family">{{ section.settings.bundle_3_badge }}</span>
+                  {%- endif -%}
                 </div>
                 {%- if section.settings.bundle_3_sub != blank -%}
                   <div class="bundle-sub">{{ section.settings.bundle_3_sub }}</div>
@@ -215,7 +222,7 @@
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <path d="M16 10a4 4 0 0 1-8 0"></path>
               </svg>
-              <span>ADD TO BAG</span>
+              <span>{{ section.settings.cart_button_text | default: 'ADD TO BAG' }}</span>
             </button>
           </div>
         </form>
@@ -241,24 +248,24 @@
         <!-- Pakistani Trust Badges -->
         <div class="trust-grid">
           <div class="trust-item">
-            <div class="trust-icon">🚚</div>
-            <div class="trust-title">Fast Delivery</div>
-            <div class="trust-desc">2-4 Days (TCS & Leopards)</div>
+            <div class="trust-icon">{{ section.settings.trust_1_icon | default: '🚚' }}</div>
+            <div class="trust-title">{{ section.settings.trust_1_title | default: 'Fast Delivery' }}</div>
+            <div class="trust-desc">{{ section.settings.trust_1_desc | default: '2-4 Days (TCS & Leopards)' }}</div>
           </div>
           <div class="trust-item">
-            <div class="trust-icon">💵</div>
-            <div class="trust-title">Pay On Delivery</div>
-            <div class="trust-desc">Cash On Delivery in all cities</div>
+            <div class="trust-icon">{{ section.settings.trust_2_icon | default: '💵' }}</div>
+            <div class="trust-title">{{ section.settings.trust_2_title | default: 'Pay On Delivery' }}</div>
+            <div class="trust-desc">{{ section.settings.trust_2_desc | default: 'Cash On Delivery in all cities' }}</div>
           </div>
           <div class="trust-item">
-            <div class="trust-icon">🛡️</div>
-            <div class="trust-title">7 Days Warranty</div>
-            <div class="trust-desc">Hassle-free replacement</div>
+            <div class="trust-icon">{{ section.settings.trust_3_icon | default: '🛡️' }}</div>
+            <div class="trust-title">{{ section.settings.trust_3_title | default: '7 Days Warranty' }}</div>
+            <div class="trust-desc">{{ section.settings.trust_3_desc | default: 'Hassle-free replacement' }}</div>
           </div>
           <div class="trust-item">
-            <div class="trust-icon">🌿</div>
-            <div class="trust-title">100% Halal</div>
-            <div class="trust-desc">No Parabens or Alcohol</div>
+            <div class="trust-icon">{{ section.settings.trust_4_icon | default: '🌿' }}</div>
+            <div class="trust-title">{{ section.settings.trust_4_title | default: '100% Halal' }}</div>
+            <div class="trust-desc">{{ section.settings.trust_4_desc | default: 'No Parabens or Alcohol' }}</div>
           </div>
         </div>
 
@@ -285,12 +292,12 @@
     <div class="sticky-thumb-info">
       <img src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 100 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 100 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Folea Thumbnail">
       <div>
-        <div class="sticky-title">Folea Serum</div>
+        <div class="sticky-title">{% if product.title != blank %}{{ product.title }}{% else %}{{ section.settings.product_title }}{% endif %}</div>
         <div class="sticky-price" id="stickyPrice">{{ section.settings.bundle_1_price }}</div>
       </div>
     </div>
     <button type="button" class="sticky-action-btn pulse-glow" id="stickyOrderBtn">
-      <span>ORDER COD</span>
+      <span>{{ section.settings.sticky_button_text | default: 'ORDER COD' }}</span>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
   </div>
@@ -351,10 +358,48 @@
       "default": "1,240+ Verified Reviews"
     },
     {
+      "type": "header",
+      "content": "Urgency Stock Banner"
+    },
+    {
+      "type": "text",
+      "id": "urgency_icon",
+      "label": "Urgency Icon",
+      "default": "🔥"
+    },
+    {
+      "type": "text",
+      "id": "urgency_prefix",
+      "label": "Urgency Prefix",
+      "default": "High Demand: Only"
+    },
+    {
       "type": "text",
       "id": "stock_left",
       "label": "Low Stock Number",
       "default": "14"
+    },
+    {
+      "type": "text",
+      "id": "urgency_unit",
+      "label": "Urgency Unit",
+      "default": "bottles"
+    },
+    {
+      "type": "text",
+      "id": "urgency_suffix",
+      "label": "Urgency Suffix",
+      "default": "left in this batch."
+    },
+    {
+      "type": "header",
+      "content": "Bundle Options Header"
+    },
+    {
+      "type": "text",
+      "id": "bundle_header_text",
+      "label": "Bundle Header Label",
+      "default": "SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):"
     },
     {
       "type": "header",
@@ -370,6 +415,11 @@
       "type": "text",
       "id": "bundle_1_discount_code",
       "label": "Bundle 1 Discount Code (Optional)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_badge",
+      "label": "Bundle 1 Badge Text (Optional)"
     },
     {
       "type": "text",
@@ -419,6 +469,12 @@
     },
     {
       "type": "text",
+      "id": "bundle_2_badge",
+      "label": "Bundle 2 Badge Text",
+      "default": "BEST DEAL"
+    },
+    {
+      "type": "text",
       "id": "bundle_2_title",
       "label": "Bundle 2 Title",
       "default": "Buy 2 Bottles (Couple / Bestie Pack)"
@@ -465,6 +521,12 @@
     },
     {
       "type": "text",
+      "id": "bundle_3_badge",
+      "label": "Bundle 3 Badge Text",
+      "default": "SAVE MAX"
+    },
+    {
+      "type": "text",
       "id": "bundle_3_title",
       "label": "Bundle 3 Title",
       "default": "Buy 3 Bottles (Family Pack)"
@@ -495,7 +557,7 @@
     },
     {
       "type": "header",
-      "content": "Call To Action Button"
+      "content": "Call To Action Buttons"
     },
     {
       "type": "text",
@@ -508,6 +570,94 @@
       "id": "cta_subtext",
       "label": "CTA Button Subtext",
       "default": "Pay at doorstep • Delivery in 2 to 4 Days"
+    },
+    {
+      "type": "text",
+      "id": "cart_button_text",
+      "label": "Add to Bag Button Text",
+      "default": "ADD TO BAG"
+    },
+    {
+      "type": "text",
+      "id": "sticky_button_text",
+      "label": "Sticky Bar Button Text",
+      "default": "ORDER COD"
+    },
+    {
+      "type": "header",
+      "content": "Pakistani Trust Badges (Under Buy Box)"
+    },
+    {
+      "type": "text",
+      "id": "trust_1_icon",
+      "label": "Trust Badge 1 Icon",
+      "default": "🚚"
+    },
+    {
+      "type": "text",
+      "id": "trust_1_title",
+      "label": "Trust Badge 1 Title",
+      "default": "Fast Delivery"
+    },
+    {
+      "type": "text",
+      "id": "trust_1_desc",
+      "label": "Trust Badge 1 Description",
+      "default": "2-4 Days (TCS & Leopards)"
+    },
+    {
+      "type": "text",
+      "id": "trust_2_icon",
+      "label": "Trust Badge 2 Icon",
+      "default": "💵"
+    },
+    {
+      "type": "text",
+      "id": "trust_2_title",
+      "label": "Trust Badge 2 Title",
+      "default": "Pay On Delivery"
+    },
+    {
+      "type": "text",
+      "id": "trust_2_desc",
+      "label": "Trust Badge 2 Description",
+      "default": "Cash On Delivery in all cities"
+    },
+    {
+      "type": "text",
+      "id": "trust_3_icon",
+      "label": "Trust Badge 3 Icon",
+      "default": "🛡️"
+    },
+    {
+      "type": "text",
+      "id": "trust_3_title",
+      "label": "Trust Badge 3 Title",
+      "default": "7 Days Warranty"
+    },
+    {
+      "type": "text",
+      "id": "trust_3_desc",
+      "label": "Trust Badge 3 Description",
+      "default": "Hassle-free replacement"
+    },
+    {
+      "type": "text",
+      "id": "trust_4_icon",
+      "label": "Trust Badge 4 Icon",
+      "default": "🌿"
+    },
+    {
+      "type": "text",
+      "id": "trust_4_title",
+      "label": "Trust Badge 4 Title",
+      "default": "100% Halal"
+    },
+    {
+      "type": "text",
+      "id": "trust_4_desc",
+      "label": "Trust Badge 4 Description",
+      "default": "No Parabens or Alcohol"
     },
     {
       "type": "header",
