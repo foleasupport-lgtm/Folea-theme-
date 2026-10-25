@@ -435,11 +435,46 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------------------------------------
   // 5. Checkout & Order Handlers (COD & Direct Shopify Checkout)
   // ----------------------------------------------------
+  const defaultBtnText = (orderNowBtn && orderNowBtn.querySelector('#btnTextLabel')) 
+    ? orderNowBtn.querySelector('#btnTextLabel').textContent.trim() 
+    : 'ORDER VIA CASH ON DELIVERY';
+  const defaultStickyText = (stickyOrderBtn && stickyOrderBtn.querySelector('span')) 
+    ? stickyOrderBtn.querySelector('span').textContent.trim() 
+    : 'ORDER COD';
+
+  function resetCheckoutButtons() {
+    if (orderNowBtn) {
+      orderNowBtn.disabled = false;
+      const btnLabel = document.getElementById('btnTextLabel');
+      if (btnLabel) btnLabel.textContent = defaultBtnText;
+    }
+    if (stickyOrderBtn) {
+      stickyOrderBtn.disabled = false;
+      const stickySpan = stickyOrderBtn.querySelector('span');
+      if (stickySpan) stickySpan.textContent = defaultStickyText;
+    }
+    if (addToCartBtn) {
+      addToCartBtn.disabled = false;
+      const span = addToCartBtn.querySelector('span');
+      if (span && span.textContent.includes('ADDING')) {
+        span.textContent = 'ADD TO BAG';
+      }
+    }
+  }
+
+  // Restore button immediately if user hits the browser Back button from Checkout (bfcache)
+  window.addEventListener('pageshow', () => {
+    resetCheckoutButtons();
+    fetchCartData();
+  });
+
+  window.addEventListener('focus', () => {
+    resetCheckoutButtons();
+  });
+
   async function executeOrderViaCheckout() {
     const btnLabel = document.getElementById('btnTextLabel');
-    const originalBtnText = btnLabel ? btnLabel.textContent : 'ORDER VIA CASH ON DELIVERY';
     const stickySpan = stickyOrderBtn ? stickyOrderBtn.querySelector('span') : null;
-    const originalStickyText = stickySpan ? stickySpan.textContent : 'ORDER COD';
 
     if (orderNowBtn) {
       orderNowBtn.disabled = true;
@@ -456,15 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle missing product gracefully without locking button or showing raw 400 error
     if (!variantId) {
-      if (orderNowBtn) {
-        orderNowBtn.disabled = false;
-        if (btnLabel) btnLabel.textContent = originalBtnText;
-      }
-      if (stickyOrderBtn) {
-        stickyOrderBtn.disabled = false;
-        if (stickySpan) stickySpan.textContent = originalStickyText;
-      }
-
+      resetCheckoutButtons();
       showToast("Shopify Product Missing", "Shopify Admin me product create/active karein.");
       alert("⚠️ Shopify Product Missing / Not Active:\n\nShopify checkout initiate karne ke liye aapke store par kam az kam 1 product 'Active' hona zaroori hai.\n\nShopify Admin > Products mein ja kar product ko 'Active' karein aur Online Store sales channel ko check karein!");
       return;
@@ -496,10 +523,14 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error('Shopify cart add failed');
       }
 
+      // Automatically restore button state in DOM so when back button is pressed, it is never stuck
+      setTimeout(resetCheckoutButtons, 1200);
+
       // 3. Immediately redirect to Shopify Checkout
       window.location.href = '/checkout';
     } catch (err) {
       console.warn('Direct checkout failed, using permalink fallback:', err);
+      setTimeout(resetCheckoutButtons, 1200);
       // Fallback: direct permalink to Shopify checkout
       window.location.href = `/cart/${variantId}:${qty}?checkout`;
     }
