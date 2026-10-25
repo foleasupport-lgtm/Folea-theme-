@@ -13,6 +13,7 @@
       "type": "folea-hero-video",
       "settings": {
         "enable_loop": false,
+        "video": "shopify://files/videos/Folia_hair_serum_product_adverti…_20261014212059.mp4",
         "video_url": "",
         "overlay_opacity": 55,
         "badge": "PAKISTAN'S #1 ANTI-FRIZZ FORMULA",
@@ -32,9 +33,9 @@
         "sale_badge_text": "SALE • SAVE 33%",
         "rating_score": "4.9 / 5.0",
         "rating_count": "1,240+ Verified Reviews",
-        "stock_left": "14",
         "urgency_icon": "🔥",
         "urgency_prefix": "High Demand: Only",
+        "stock_left": "14",
         "urgency_unit": "bottles",
         "urgency_suffix": "left in this batch.",
         "bundle_header_text": "SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):",
