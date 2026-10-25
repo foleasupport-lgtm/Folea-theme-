@@ -2,6 +2,13 @@
   "current": {
     "color_accent": "#C26D4D",
     "color_primary": "#161514",
-    "color_bg": "#FAF7F2"
+    "color_bg": "#FAF7F2",
+    "checkout_logo_position": "left",
+    "checkout_logo_size": "medium",
+    "checkout_accent_color": "#C26D4D",
+    "checkout_button_color": "#161514",
+    "checkout_body_background_color": "#FFFFFF",
+    "checkout_sidebar_background_color": "#FAF7F2",
+    "checkout_error_color": "#D32F2F"
   }
 }

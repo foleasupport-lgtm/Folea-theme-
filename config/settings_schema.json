@@ -1,1 +1,176 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Folea Luxury Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "Folea Studio",
+    "theme_documentation_url": "https://folea.pk",
+    "theme_support_url": "https://folea.pk"
+  },
+  {
+    "name": "Logo & Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Header Brand Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 60,
+        "max": 300,
+        "step": 10,
+        "default": 130,
+        "unit": "px",
+        "label": "Logo width"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "32 x 32px .png recommended"
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary Dark Text",
+        "default": "#161514"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent Terracotta",
+        "default": "#C26D4D"
+      },
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Page Background",
+        "default": "#FAF7F2"
+      }
+    ]
+  },
+  {
+    "name": "Checkout",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Checkout Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "checkout_logo_image",
+        "label": "Logo image",
+        "info": "Upload Folea logo (folea-logo.png) to display at the top of the Checkout page."
+      },
+      {
+        "type": "select",
+        "id": "checkout_logo_position",
+        "label": "Logo position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "left"
+      },
+      {
+        "type": "select",
+        "id": "checkout_logo_size",
+        "label": "Logo size",
+        "options": [
+          {
+            "value": "small",
+            "label": "Small"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ],
+        "default": "medium"
+      },
+      {
+        "type": "header",
+        "content": "Checkout Banner"
+      },
+      {
+        "type": "image_picker",
+        "id": "checkout_banner_image",
+        "label": "Banner image",
+        "info": "1000 x 400px recommended"
+      },
+      {
+        "type": "header",
+        "content": "Checkout Main Area"
+      },
+      {
+        "type": "image_picker",
+        "id": "checkout_body_background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "color",
+        "id": "checkout_body_background_color",
+        "label": "Background color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "header",
+        "content": "Order Summary Sidebar"
+      },
+      {
+        "type": "image_picker",
+        "id": "checkout_sidebar_background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "color",
+        "id": "checkout_sidebar_background_color",
+        "label": "Background color",
+        "default": "#FAF7F2"
+      },
+      {
+        "type": "header",
+        "content": "Colors & Buttons"
+      },
+      {
+        "type": "color",
+        "id": "checkout_accent_color",
+        "label": "Accents & Links",
+        "default": "#C26D4D"
+      },
+      {
+        "type": "color",
+        "id": "checkout_button_color",
+        "label": "Buttons",
+        "default": "#161514"
+      },
+      {
+        "type": "color",
+        "id": "checkout_error_color",
+        "label": "Errors",
+        "default": "#D32F2F"
+      }
+    ]
+  }
+]
