@@ -2315,3 +2315,41 @@ html, body {
   z-index: -99999 !important;
 }
 
+/* Dynamic Live Shopify Description */
+.product-live-description {
+  margin-top: 24px;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid rgba(179, 139, 109, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(44, 30, 22, 0.04);
+}
+.live-desc-header {
+  border-bottom: 1px solid rgba(179, 139, 109, 0.15);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.live-desc-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary, #2c1e16);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.live-desc-body {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--color-text, #443c36);
+}
+.live-desc-body p {
+  margin: 0 0 10px 0;
+}
+.live-desc-body p:last-child {
+  margin-bottom: 0;
+}
+.live-desc-body ul, .live-desc-body ol {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+

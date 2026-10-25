@@ -69,16 +69,24 @@
           {%- endif -%}
         </div>
 
-        <div class="thumb-strip">
-          <button type="button" class="thumb-btn active" data-src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 800 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 800 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}">
-            <img src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 160 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 160 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Front Bottle">
-          </button>
-          <button type="button" class="thumb-btn" data-src="{% if product.images[1] != blank %}{{ product.images[1] | image_url: width: 800 }}{% elsif section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 800 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
-            <img src="{% if product.images[1] != blank %}{{ product.images[1] | image_url: width: 160 }}{% elsif section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 160 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}" alt="Texture Detail">
-          </button>
-          <button type="button" class="thumb-btn" data-src="{% if product.images[2] != blank %}{{ product.images[2] | image_url: width: 800 }}{% elsif section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 800 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}">
-            <img src="{% if product.images[2] != blank %}{{ product.images[2] | image_url: width: 160 }}{% elsif section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 160 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}" alt="Transformation">
-          </button>
+        <div class="thumb-strip" id="productThumbStrip">
+          {%- if product != blank and product.images.size > 0 -%}
+            {%- for img in product.images -%}
+              <button type="button" class="thumb-btn {% if forloop.first %}active{% endif %}" data-src="{{ img | image_url: width: 800 }}" aria-label="Product Image {{ forloop.index }}">
+                <img src="{{ img | image_url: width: 160 }}" alt="{{ img.alt | default: product.title | escape }}">
+              </button>
+            {%- endfor -%}
+          {%- else -%}
+            <button type="button" class="thumb-btn active" data-src="{% if section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 800 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}">
+              <img src="{% if section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 160 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Front Bottle">
+            </button>
+            <button type="button" class="thumb-btn" data-src="{% if section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 800 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}">
+              <img src="{% if section.settings.custom_image_2 != blank %}{{ section.settings.custom_image_2 | image_url: width: 160 }}{% else %}{{ 'folea-texture.jpg' | asset_url }}{% endif %}" alt="Texture Detail">
+            </button>
+            <button type="button" class="thumb-btn" data-src="{% if section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 800 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}">
+              <img src="{% if section.settings.custom_image_3 != blank %}{{ section.settings.custom_image_3 | image_url: width: 160 }}{% else %}{{ 'folea-results.jpg' | asset_url }}{% endif %}" alt="Transformation">
+            </button>
+          {%- endif -%}
         </div>
       </div>
 
@@ -253,6 +261,18 @@
             <div class="trust-desc">No Parabens or Alcohol</div>
           </div>
         </div>
+
+        <!-- Dynamic Live Shopify Description -->
+        {%- if product.description != blank -%}
+          <div class="product-live-description">
+            <div class="live-desc-header">
+              <span class="live-desc-title">Product Details</span>
+            </div>
+            <div class="live-desc-body rte">
+              {{ product.description }}
+            </div>
+          </div>
+        {%- endif -%}
 
       </div>
     </div>
