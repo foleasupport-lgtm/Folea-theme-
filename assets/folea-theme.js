@@ -73,6 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const orderNowBtn = document.getElementById('orderNowBtn');
   const addToCartBtn = document.getElementById('addToCartBtn');
   const stickyOrderBtn = document.getElementById('stickyOrderBtn');
+  const stickyMobileBar = document.getElementById('stickyMobileBar');
+  if (stickyMobileBar && stickyMobileBar.parentElement !== document.body) {
+    document.body.appendChild(stickyMobileBar);
+  }
   const cartSuccessToast = document.getElementById('cartSuccessToast');
 
   const thumbBtns = document.querySelectorAll('.thumb-btn');
@@ -535,13 +539,18 @@ document.addEventListener('DOMContentLoaded', () => {
     resetCheckoutButtons();
   });
 
+  let isNavigatingToCheckout = false;
+
   async function executeOrderViaCheckout() {
+    if (isNavigatingToCheckout) return;
+    isNavigatingToCheckout = true;
+
     const btnLabel = document.getElementById('btnTextLabel');
     const stickySpan = stickyOrderBtn ? stickyOrderBtn.querySelector('span') : null;
 
     if (orderNowBtn) {
       orderNowBtn.disabled = true;
-      if (btnLabel) btnLabel.textContent = 'PROCEEDING TO CHECKOUT...';
+      if (btnLabel) btnLabel.textContent = 'CHECKOUT...';
     }
 
     if (stickyOrderBtn) {
@@ -554,15 +563,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const variantId = (cardVariantId && cardVariantId.trim() !== '' && cardVariantId !== '1') ? cardVariantId : await resolveVariantId();
     const discountCode = activeCard ? (activeCard.getAttribute('data-discount') || '').trim() : '';
     const { totalQty } = updateBundleRealQuantity();
-    const qty = totalQty;
+    const qty = totalQty || 1;
 
     // Handle missing product gracefully without locking button or showing raw 400 error
     if (!variantId) {
+      isNavigatingToCheckout = false;
       resetCheckoutButtons();
       showToast("Shopify Product Missing", "Shopify Admin me product create/active karein.");
-      alert("⚠️ Shopify Product Missing / Not Active:\n\nShopify checkout initiate karne ke liye aapke store par kam az kam 1 product 'Active' hona zaroori hai.\n\nShopify Admin > Products mein ja kar product ko 'Active' karein aur Online Store sales channel ko check karein!");
       return;
     }
+
+    const permalinkUrl = `/cart/${variantId}:${qty}?checkout${discountCode ? `&discount=${encodeURIComponent(discountCode)}` : ''}`;
 
     try {
       // 1. Clear cart to ensure exact bundle and quantity is purchased
@@ -586,14 +597,17 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       });
 
+      setTimeout(() => {
+        isNavigatingToCheckout = false;
+        resetCheckoutButtons();
+      }, 1500);
+
       if (!addRes.ok) {
-        throw new Error('Shopify cart add failed');
+        window.location.href = permalinkUrl;
+        return;
       }
 
-      // Automatically restore button state in DOM so when back button is pressed, it is never stuck
-      setTimeout(resetCheckoutButtons, 1200);
-
-      // 3. Immediately redirect to Shopify Checkout (with discount code if configured)
+      // 3. Immediately redirect to Shopify Checkout
       let checkoutUrl = '/checkout';
       if (discountCode) {
         checkoutUrl += `?discount=${encodeURIComponent(discountCode)}`;
@@ -601,38 +615,34 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = checkoutUrl;
     } catch (err) {
       console.warn('Direct checkout failed, using permalink fallback:', err);
-      setTimeout(resetCheckoutButtons, 1200);
-      let permalink = `/cart/${variantId}:${qty}?checkout`;
-      if (discountCode) {
-        permalink += `&discount=${encodeURIComponent(discountCode)}`;
-      }
-      window.location.href = permalink;
+      setTimeout(() => {
+        isNavigatingToCheckout = false;
+        resetCheckoutButtons();
+      }, 1500);
+      window.location.href = permalinkUrl;
     }
   }
 
-  if (orderNowBtn) orderNowBtn.addEventListener('click', executeOrderViaCheckout);
+  function handleOrderNowTrigger(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    executeOrderViaCheckout();
+  }
+
+  if (orderNowBtn) {
+    orderNowBtn.addEventListener('click', handleOrderNowTrigger);
+  }
 
   if (stickyOrderBtn) {
-    stickyOrderBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      executeOrderViaCheckout();
-    });
+    stickyOrderBtn.addEventListener('click', handleOrderNowTrigger);
+    stickyOrderBtn.addEventListener('touchend', handleOrderNowTrigger);
   }
 
-  const stickyThumbInfo = document.querySelector('.sticky-thumb-info');
-  if (stickyThumbInfo) {
-    stickyThumbInfo.addEventListener('click', (e) => {
-      e.stopPropagation();
-      executeOrderViaCheckout();
-    });
-  }
-
-  const stickyMobileBar = document.getElementById('stickyMobileBar');
   if (stickyMobileBar) {
-    stickyMobileBar.addEventListener('click', (e) => {
-      if (e.target.closest('#stickyOrderBtn')) return;
-      executeOrderViaCheckout();
-    });
+    stickyMobileBar.addEventListener('click', handleOrderNowTrigger);
+    stickyMobileBar.addEventListener('touchend', handleOrderNowTrigger);
   }
 
   // Handle drawer checkout buttons
