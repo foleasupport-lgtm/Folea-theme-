@@ -1,3 +1,4 @@
+
 // Folea Shopify Theme 2.0 - Core Storefront & Cart Engine
 // Full Shopify API Integration, Drawer Management & Dynamic Quantity Sync
 
@@ -43,7 +44,7 @@
       }
     });
     obs.observe(document.documentElement, { childList: true, subtree: true });
-  } catch (e) {}
+  } catch (e) { }
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeMenuBtn = document.getElementById('closeMenuBtn');
   const mobileNavDrawer = document.getElementById('mobileNavDrawer');
   const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
-  
+
   const cartBtn = document.getElementById('cartBtn');
   const closeCartBtn = document.getElementById('closeCartBtn');
   const cartDrawer = document.getElementById('cartDrawer');
@@ -61,19 +62,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const drawerCartCount = document.getElementById('drawerCartCount');
   const drawerCartTotal = document.getElementById('drawerCartTotal');
   const cartDrawerBody = document.getElementById('cartDrawerBody');
-  
+
   const bundleCards = document.querySelectorAll('.bundle-card');
   const qtyInput = document.getElementById('qtyInput');
   const qtyMinus = document.getElementById('qtyMinus');
   const qtyPlus = document.getElementById('qtyPlus');
   const foleaRealQuantity = document.getElementById('foleaRealQuantity');
   const foleaVariantId = document.getElementById('foleaVariantId');
-  
+
   const orderNowBtn = document.getElementById('orderNowBtn');
   const addToCartBtn = document.getElementById('addToCartBtn');
   const stickyOrderBtn = document.getElementById('stickyOrderBtn');
   const cartSuccessToast = document.getElementById('cartSuccessToast');
-  
+
   const thumbBtns = document.querySelectorAll('.thumb-btn');
   const mainProductImg = document.getElementById('mainProductImg');
   const faqItems = document.querySelectorAll('.faq-item');
@@ -144,14 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const data = localStorage.getItem('folea_cart_storage');
       if (data) return JSON.parse(data);
-    } catch (e) {}
+    } catch (e) { }
     return { items: [], item_count: 0, total_price: 0, currency: 'PKR' };
   }
 
   function saveLocalCart(cart) {
     try {
       localStorage.setItem('folea_cart_storage', JSON.stringify(cart));
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function calculateCartTotals(cart) {
@@ -401,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (foleaVariantId) foleaVariantId.value = vid;
           return vid;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // Check Shopify /products.json catalog
@@ -430,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (foleaVariantId) foleaVariantId.value = vid;
         return vid;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return null;
   }
@@ -497,11 +498,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------------------------------------
   // 5. Checkout & Order Handlers (COD & Direct Shopify Checkout)
   // ----------------------------------------------------
-  const defaultBtnText = (orderNowBtn && orderNowBtn.querySelector('#btnTextLabel')) 
-    ? orderNowBtn.querySelector('#btnTextLabel').textContent.trim() 
+  const defaultBtnText = (orderNowBtn && orderNowBtn.querySelector('#btnTextLabel'))
+    ? orderNowBtn.querySelector('#btnTextLabel').textContent.trim()
     : 'ORDER VIA CASH ON DELIVERY';
-  const defaultStickyText = (stickyOrderBtn && stickyOrderBtn.querySelector('span')) 
-    ? stickyOrderBtn.querySelector('span').textContent.trim() 
+  const defaultStickyText = (stickyOrderBtn && stickyOrderBtn.querySelector('span'))
+    ? stickyOrderBtn.querySelector('span').textContent.trim()
     : 'ORDER COD';
 
   function resetCheckoutButtons() {
@@ -723,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Smooth anchor navigation without polluting URL hash (prevents jumping on reload)
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
       const href = this.getAttribute('href');
       if (href && href.length > 1 && href.startsWith('#')) {
         const target = document.querySelector(href);

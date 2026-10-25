@@ -786,6 +786,11 @@ video::-webkit-media-controls {
   -webkit-overflow-scrolling: touch;
 }
 
+.thumb-strip:has(.thumb-btn:only-child),
+.thumb-strip:empty {
+  display: none !important;
+}
+
 .thumb-strip::-webkit-scrollbar {
   height: 4px;
 }
