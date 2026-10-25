@@ -314,13 +314,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------------------------------------
   // 3. Dynamic Bundle Selection & Quantity Sync
   // ----------------------------------------------------
+  let bundlePackCount = 1;
+
+  function updateBundleRealQuantity() {
+    const selectedCard = document.querySelector('.bundle-card.selected') || bundleCards[0];
+    const qtyPerPack = parseInt(selectedCard ? selectedCard.getAttribute('data-qty') : 1, 10) || 1;
+    const finalCalculatedQty = Math.max(1, bundlePackCount * qtyPerPack);
+    if (foleaRealQuantity) foleaRealQuantity.value = finalCalculatedQty;
+    return {
+      packCount: bundlePackCount,
+      totalQty: finalCalculatedQty
+    };
+  }
+
   bundleCards.forEach(card => {
     card.addEventListener('click', () => {
       bundleCards.forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
 
       const cardVariantId = card.getAttribute('data-variant-id');
-      const qty = parseInt(card.getAttribute('data-qty'), 10) || 1;
       const price = card.getAttribute('data-price');
       const compare = card.getAttribute('data-compare');
       const savings = card.getAttribute('data-savings');
@@ -329,8 +341,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (foleaVariantId) foleaVariantId.value = cardVariantId;
       }
 
-      currentQuantity = qty;
-      syncQuantity(qty);
+      // Quantity ALWAYS resets to 1 bundle pack when clicking a bundle
+      bundlePackCount = 1;
+      if (qtyInput) qtyInput.value = 1;
+      updateBundleRealQuantity();
 
       const displayPrice = document.getElementById('displayPrice');
       const displayComparePrice = document.getElementById('displayComparePrice');
@@ -344,26 +358,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  function syncQuantity(qty) {
-    currentQuantity = Math.max(1, qty);
-    if (qtyInput) qtyInput.value = currentQuantity;
-    if (foleaRealQuantity) foleaRealQuantity.value = currentQuantity;
-  }
-
   if (qtyMinus && qtyPlus && qtyInput) {
     qtyMinus.addEventListener('click', () => {
-      if (currentQuantity > 1) {
-        syncQuantity(currentQuantity - 1);
+      if (bundlePackCount > 1) {
+        bundlePackCount--;
+        qtyInput.value = bundlePackCount;
+        updateBundleRealQuantity();
       }
     });
 
     qtyPlus.addEventListener('click', () => {
-      syncQuantity(currentQuantity + 1);
+      bundlePackCount++;
+      qtyInput.value = bundlePackCount;
+      updateBundleRealQuantity();
     });
 
     qtyInput.addEventListener('change', () => {
-      const val = parseInt(qtyInput.value) || 1;
-      syncQuantity(val);
+      const val = parseInt(qtyInput.value, 10) || 1;
+      bundlePackCount = Math.max(1, val);
+      qtyInput.value = bundlePackCount;
+      updateBundleRealQuantity();
     });
   }
 
@@ -430,8 +444,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const originalText = addToCartBtn.innerHTML;
       addToCartBtn.innerHTML = `<span>ADDING...</span>`;
 
-      const variantId = await resolveVariantId();
-      const qty = currentQuantity || 1;
+      const activeCard = document.querySelector('.bundle-card.selected') || bundleCards[0];
+      const cardVariantId = activeCard ? activeCard.getAttribute('data-variant-id') : null;
+      const variantId = (cardVariantId && cardVariantId.trim() !== '' && cardVariantId !== '1') ? cardVariantId : await resolveVariantId();
+      const { totalQty, packCount } = updateBundleRealQuantity();
+      const qty = totalQty;
 
       if (!variantId) {
         addToCartBtn.disabled = false;
@@ -462,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (res.ok) {
           await fetchCartData();
-          showToast("Added to Bag!", `${qty}x Folea Serum added.`);
+          showToast("Added to Bag!", `${packCount}x Bundle added to your bag.`);
           openCartDrawer();
         } else {
           const errData = await res.json().catch(() => ({}));
@@ -531,8 +548,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (stickySpan) stickySpan.textContent = 'CHECKOUT...';
     }
 
-    const variantId = await resolveVariantId();
-    const qty = currentQuantity || 1;
+    const activeCard = document.querySelector('.bundle-card.selected') || bundleCards[0];
+    const cardVariantId = activeCard ? activeCard.getAttribute('data-variant-id') : null;
+    const variantId = (cardVariantId && cardVariantId.trim() !== '' && cardVariantId !== '1') ? cardVariantId : await resolveVariantId();
+    const discountCode = activeCard ? (activeCard.getAttribute('data-discount') || '').trim() : '';
+    const { totalQty } = updateBundleRealQuantity();
+    const qty = totalQty;
 
     // Handle missing product gracefully without locking button or showing raw 400 error
     if (!variantId) {
@@ -571,13 +592,20 @@ document.addEventListener('DOMContentLoaded', () => {
       // Automatically restore button state in DOM so when back button is pressed, it is never stuck
       setTimeout(resetCheckoutButtons, 1200);
 
-      // 3. Immediately redirect to Shopify Checkout
-      window.location.href = '/checkout';
+      // 3. Immediately redirect to Shopify Checkout (with discount code if configured)
+      let checkoutUrl = '/checkout';
+      if (discountCode) {
+        checkoutUrl += `?discount=${encodeURIComponent(discountCode)}`;
+      }
+      window.location.href = checkoutUrl;
     } catch (err) {
       console.warn('Direct checkout failed, using permalink fallback:', err);
       setTimeout(resetCheckoutButtons, 1200);
-      // Fallback: direct permalink to Shopify checkout
-      window.location.href = `/cart/${variantId}:${qty}?checkout`;
+      let permalink = `/cart/${variantId}:${qty}?checkout`;
+      if (discountCode) {
+        permalink += `&discount=${encodeURIComponent(discountCode)}`;
+      }
+      window.location.href = permalink;
     }
   }
 

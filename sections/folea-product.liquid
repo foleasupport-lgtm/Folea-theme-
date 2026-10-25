@@ -29,14 +29,27 @@
   {%- assign resolved_variant_id = manual_id -%}
 {%- endif -%}
 
-{%- assign v1_id = resolved_variant_id -%}
-{%- assign v2_id = resolved_variant_id -%}
-{%- assign v3_id = resolved_variant_id -%}
-{%- if product.variants.size >= 2 -%}
-  {%- assign v2_id = product.variants[1].id -%}
+{%- assign v1 = product.variants[0] | default: current_variant -%}
+{%- assign v2 = product.variants[1] | default: v1 -%}
+{%- assign v3 = product.variants[2] | default: v1 -%}
+
+{%- assign v1_id = v1.id -%}
+{%- assign v2_id = v2.id -%}
+{%- assign v3_id = v3.id -%}
+
+{%- if section.settings.bundle_1_variant_id != blank -%}
+  {%- assign v1_id = section.settings.bundle_1_variant_id | strip -%}
 {%- endif -%}
-{%- if product.variants.size >= 3 -%}
-  {%- assign v3_id = product.variants[2].id -%}
+{%- if section.settings.bundle_2_variant_id != blank -%}
+  {%- assign v2_id = section.settings.bundle_2_variant_id | strip -%}
+{%- endif -%}
+{%- if section.settings.bundle_3_variant_id != blank -%}
+  {%- assign v3_id = section.settings.bundle_3_variant_id | strip -%}
+{%- endif -%}
+
+{%- assign has_bundle_variants = false -%}
+{%- if product.variants.size >= 3 or section.settings.bundle_2_variant_id != blank or section.settings.bundle_3_variant_id != blank -%}
+  {%- assign has_bundle_variants = true -%}
 {%- endif -%}
 
 <main class="product-section" id="productSection">
@@ -82,15 +95,15 @@
 
         <div class="price-row">
           <span class="current-price" id="displayPrice">
-            {%- if current_variant.price -%}
-              {{ current_variant.price | money }}
+            {%- if product.variants.size >= 1 and v1.price -%}
+              {{ v1.price | money }}
             {%- else -%}
               {{ section.settings.bundle_1_price }}
             {%- endif -%}
           </span>
           <span class="compare-price" id="displayComparePrice">
-            {%- if current_variant.compare_at_price -%}
-              {{ current_variant.compare_at_price | money }}
+            {%- if product.variants.size >= 1 and v1.compare_at_price -%}
+              {{ v1.compare_at_price | money }}
             {%- else -%}
               {{ section.settings.bundle_1_compare }}
             {%- endif -%}
@@ -105,14 +118,14 @@
 
         <!-- REAL SHOPIFY BACKEND FORM -->
         <form method="post" action="/cart/add" id="foleaProductForm" enctype="multipart/form-data" class="folea-native-form">
-          <input type="hidden" name="id" id="foleaVariantId" value="{{ resolved_variant_id }}">
+          <input type="hidden" name="id" id="foleaVariantId" value="{{ v1_id }}">
           <input type="hidden" name="quantity" id="foleaRealQuantity" value="1">
 
           <!-- Bundle Selector (Synced with Shopify Quantity & Variants) -->
           <div class="bundle-selector">
             <div class="bundle-header">SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):</div>
             
-            <div class="bundle-card selected" data-bundle="1" data-variant-id="{{ v1_id }}" data-qty="1" data-price="{% if current_variant.price %}{{ current_variant.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if current_variant.compare_at_price %}{{ current_variant.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}">
+            <div class="bundle-card selected" data-bundle="1" data-variant-id="{{ v1_id }}" data-bottles="1" data-qty="1" data-price="{% if product.variants.size >= 1 and v1.price %}{{ v1.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if product.variants.size >= 1 and v1.compare_at_price %}{{ v1.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}" data-discount="{{ section.settings.bundle_1_discount_code | strip }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
                 <div class="bundle-title-row">
@@ -123,12 +136,12 @@
                 {%- endif -%}
               </div>
               <div class="bundle-pricing">
-                <div class="bundle-p">{{ section.settings.bundle_1_price }}</div>
-                <div class="bundle-was">{{ section.settings.bundle_1_compare }}</div>
+                <div class="bundle-p">{% if product.variants.size >= 1 and v1.price %}{{ v1.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}</div>
+                <div class="bundle-was">{% if product.variants.size >= 1 and v1.compare_at_price %}{{ v1.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}</div>
               </div>
             </div>
 
-            <div class="bundle-card" data-bundle="2" data-variant-id="{{ v2_id }}" data-qty="{% if product.variants.size >= 2 %}1{% else %}2{% endif %}" data-price="{{ section.settings.bundle_2_price }}" data-compare="{{ section.settings.bundle_2_compare }}" data-savings="{{ section.settings.bundle_2_save }}">
+            <div class="bundle-card" data-bundle="2" data-variant-id="{{ v2_id }}" data-bottles="2" data-qty="{% if has_bundle_variants %}1{% else %}2{% endif %}" data-price="{% if product.variants.size >= 2 and v2.price %}{{ v2.price | money }}{% else %}{{ section.settings.bundle_2_price }}{% endif %}" data-compare="{% if product.variants.size >= 2 and v2.compare_at_price %}{{ v2.compare_at_price | money }}{% else %}{{ section.settings.bundle_2_compare }}{% endif %}" data-savings="{{ section.settings.bundle_2_save }}" data-discount="{{ section.settings.bundle_2_discount_code | strip }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
                 <div class="bundle-title-row">
@@ -140,12 +153,12 @@
                 {%- endif -%}
               </div>
               <div class="bundle-pricing">
-                <div class="bundle-p">{{ section.settings.bundle_2_price }}</div>
-                <div class="bundle-was">{{ section.settings.bundle_2_compare }}</div>
+                <div class="bundle-p">{% if product.variants.size >= 2 and v2.price %}{{ v2.price | money }}{% else %}{{ section.settings.bundle_2_price }}{% endif %}</div>
+                <div class="bundle-was">{% if product.variants.size >= 2 and v2.compare_at_price %}{{ v2.compare_at_price | money }}{% else %}{{ section.settings.bundle_2_compare }}{% endif %}</div>
               </div>
             </div>
 
-            <div class="bundle-card" data-bundle="3" data-variant-id="{{ v3_id }}" data-qty="{% if product.variants.size >= 3 %}1{% else %}3{% endif %}" data-price="{{ section.settings.bundle_3_price }}" data-compare="{{ section.settings.bundle_3_compare }}" data-savings="{{ section.settings.bundle_3_save }}">
+            <div class="bundle-card" data-bundle="3" data-variant-id="{{ v3_id }}" data-bottles="3" data-qty="{% if has_bundle_variants %}1{% else %}3{% endif %}" data-price="{% if product.variants.size >= 3 and v3.price %}{{ v3.price | money }}{% else %}{{ section.settings.bundle_3_price }}{% endif %}" data-compare="{% if product.variants.size >= 3 and v3.compare_at_price %}{{ v3.compare_at_price | money }}{% else %}{{ section.settings.bundle_3_compare }}{% endif %}" data-savings="{{ section.settings.bundle_3_save }}" data-discount="{{ section.settings.bundle_3_discount_code | strip }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
                 <div class="bundle-title-row">
@@ -157,8 +170,8 @@
                 {%- endif -%}
               </div>
               <div class="bundle-pricing">
-                <div class="bundle-p">{{ section.settings.bundle_3_price }}</div>
-                <div class="bundle-was">{{ section.settings.bundle_3_compare }}</div>
+                <div class="bundle-p">{% if product.variants.size >= 3 and v3.price %}{{ v3.price | money }}{% else %}{{ section.settings.bundle_3_price }}{% endif %}</div>
+                <div class="bundle-was">{% if product.variants.size >= 3 and v3.compare_at_price %}{{ v3.compare_at_price | money }}{% else %}{{ section.settings.bundle_3_compare }}{% endif %}</div>
               </div>
             </div>
           </div>
@@ -329,6 +342,17 @@
     },
     {
       "type": "text",
+      "id": "bundle_1_variant_id",
+      "label": "Bundle 1 Variant ID (Optional)",
+      "info": "Leave blank to auto-detect first product variant"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_discount_code",
+      "label": "Bundle 1 Discount Code (Optional)"
+    },
+    {
+      "type": "text",
       "id": "bundle_1_title",
       "label": "Bundle 1 Title",
       "default": "Buy 1 Bottle (Starter Pack)"
@@ -363,6 +387,18 @@
     },
     {
       "type": "text",
+      "id": "bundle_2_variant_id",
+      "label": "Bundle 2 Variant ID (Pack of 2 - Rs. 3,599)",
+      "info": "Shopify Variant ID for Couple Pack"
+    },
+    {
+      "type": "text",
+      "id": "bundle_2_discount_code",
+      "label": "Bundle 2 Discount Code (Fallback)",
+      "info": "Shopify discount code for 2 bottles if 1 variant is used"
+    },
+    {
+      "type": "text",
       "id": "bundle_2_title",
       "label": "Bundle 2 Title",
       "default": "Buy 2 Bottles (Couple / Bestie Pack)"
@@ -394,6 +430,18 @@
     {
       "type": "header",
       "content": "Bundle 3 (Family Pack)"
+    },
+    {
+      "type": "text",
+      "id": "bundle_3_variant_id",
+      "label": "Bundle 3 Variant ID (Pack of 3 - Rs. 4,999)",
+      "info": "Shopify Variant ID for Family Pack"
+    },
+    {
+      "type": "text",
+      "id": "bundle_3_discount_code",
+      "label": "Bundle 3 Discount Code (Fallback)",
+      "info": "Shopify discount code for 3 bottles if 1 variant is used"
     },
     {
       "type": "text",
