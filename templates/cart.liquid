@@ -1,0 +1,54 @@
+<div class="cart-page-wrapper" style="max-width: 900px; margin: 40px auto; padding: 0 20px; font-family: 'Plus Jakarta Sans', sans-serif;">
+  <h1 style="font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 24px; color: #161514;">Shopping Bag</h1>
+
+  {%- if cart.item_count > 0 -%}
+    <form action="/cart" method="post" id="foleaCartForm">
+      <div style="background: #ffffff; border: 1px solid #e8e2d9; border-radius: 12px; overflow: hidden; margin-bottom: 30px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: #FAF7F2; border-bottom: 1px solid #e8e2d9; text-align: left; font-size: 13px; text-transform: uppercase; color: #666; letter-spacing: 0.05em;">
+              <th style="padding: 16px;">Product</th>
+              <th style="padding: 16px; text-align: center;">Quantity</th>
+              <th style="padding: 16px; text-align: right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr style="border-bottom: 1px solid #f0ebe4;">
+                <td style="padding: 16px; display: flex; align-items: center; gap: 16px;">
+                  {%- if item.image -%}
+                    <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title }}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+                  {%- endif -%}
+                  <div>
+                    <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 4px 0; color: #161514;">{{ item.product.title }}</h3>
+                    <div style="font-size: 13px; color: #888;">{{ item.price | money }}</div>
+                  </div>
+                </td>
+                <td style="padding: 16px; text-align: center;">
+                  <span style="display: inline-block; padding: 6px 14px; background: #FAF7F2; border-radius: 20px; font-weight: 600;">{{ item.quantity }}</span>
+                </td>
+                <td style="padding: 16px; text-align: right; font-weight: 700; color: #161514;">
+                  {{ item.final_line_price | money }}
+                </td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e8e2d9; border-radius: 12px; padding: 24px; max-width: 420px; margin-left: auto;">
+        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #161514;">
+          <span>Subtotal</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+        <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Shipping & taxes calculated at checkout. Cash on Delivery available across Pakistan.</p>
+        <a href="/checkout" style="display: block; width: 100%; text-align: center; background: #161514; color: #ffffff; padding: 16px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 15px; letter-spacing: 0.05em; box-shadow: 0 4px 14px rgba(0,0,0,0.15);">PROCEED TO CHECKOUT</a>
+      </div>
+    </form>
+  {%- else -%}
+    <div style="text-align: center; padding: 80px 20px; background: #ffffff; border: 1px solid #e8e2d9; border-radius: 12px;">
+      <p style="font-size: 18px; color: #666; margin-bottom: 24px;">Your shopping bag is currently empty.</p>
+      <a href="/" style="display: inline-block; background: #C26D4D; color: #ffffff; padding: 14px 28px; border-radius: 8px; font-weight: 600; text-decoration: none;">Order Folea Serum</a>
+    </div>
+  {%- endif -%}
+</div>

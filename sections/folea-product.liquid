@@ -1,15 +1,43 @@
 {%- assign product = all_products[section.settings.featured_product] -%}
 {%- if product == blank or product.empty? -%}
+  {%- assign product = all_products['folea-anti-frizz-hair-serum'] -%}
+{%- endif -%}
+{%- if product == blank or product.empty? -%}
+  {%- assign product = all_products['anti-frizz-hair-serum'] -%}
+{%- endif -%}
+{%- if product == blank or product.empty? -%}
+  {%- assign product = all_products['folea-serum'] -%}
+{%- endif -%}
+{%- if product == blank or product.empty? -%}
+  {%- assign product = collections['all'].products.first -%}
+{%- endif -%}
+{%- if product == blank or product.empty? -%}
   {%- assign product = collections.all.products.first -%}
 {%- endif -%}
 {%- if product == blank or product.empty? -%}
   {%- for collection in collections -%}
     {%- if collection.products.first != blank and product == blank -%}
       {%- assign product = collection.products.first -%}
+      {%- break -%}
     {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
 {%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign manual_id = section.settings.manual_variant_id | strip -%}
+{%- assign resolved_variant_id = current_variant.id -%}
+{%- if resolved_variant_id == blank and manual_id != blank -%}
+  {%- assign resolved_variant_id = manual_id -%}
+{%- endif -%}
+
+{%- assign v1_id = resolved_variant_id -%}
+{%- assign v2_id = resolved_variant_id -%}
+{%- assign v3_id = resolved_variant_id -%}
+{%- if product.variants.size >= 2 -%}
+  {%- assign v2_id = product.variants[1].id -%}
+{%- endif -%}
+{%- if product.variants.size >= 3 -%}
+  {%- assign v3_id = product.variants[2].id -%}
+{%- endif -%}
 
 <main class="product-section" id="productSection">
   <div class="container">
@@ -77,14 +105,14 @@
 
         <!-- REAL SHOPIFY BACKEND FORM -->
         <form method="post" action="/cart/add" id="foleaProductForm" enctype="multipart/form-data" class="folea-native-form">
-          <input type="hidden" name="id" id="foleaVariantId" value="{{ current_variant.id }}">
+          <input type="hidden" name="id" id="foleaVariantId" value="{{ resolved_variant_id }}">
           <input type="hidden" name="quantity" id="foleaRealQuantity" value="1">
 
-          <!-- Bundle Selector (Synced with Shopify Quantity) -->
+          <!-- Bundle Selector (Synced with Shopify Quantity & Variants) -->
           <div class="bundle-selector">
             <div class="bundle-header">SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):</div>
             
-            <div class="bundle-card selected" data-bundle="1" data-qty="1" data-price="{% if current_variant.price %}{{ current_variant.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if current_variant.compare_at_price %}{{ current_variant.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}">
+            <div class="bundle-card selected" data-bundle="1" data-variant-id="{{ v1_id }}" data-qty="1" data-price="{% if current_variant.price %}{{ current_variant.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if current_variant.compare_at_price %}{{ current_variant.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
                 <div class="bundle-title-row">
@@ -100,7 +128,7 @@
               </div>
             </div>
 
-            <div class="bundle-card" data-bundle="2" data-qty="2" data-price="{{ section.settings.bundle_2_price }}" data-compare="{{ section.settings.bundle_2_compare }}" data-savings="{{ section.settings.bundle_2_save }}">
+            <div class="bundle-card" data-bundle="2" data-variant-id="{{ v2_id }}" data-qty="{% if product.variants.size >= 2 %}1{% else %}2{% endif %}" data-price="{{ section.settings.bundle_2_price }}" data-compare="{{ section.settings.bundle_2_compare }}" data-savings="{{ section.settings.bundle_2_save }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
                 <div class="bundle-title-row">
@@ -117,7 +145,7 @@
               </div>
             </div>
 
-            <div class="bundle-card" data-bundle="3" data-qty="3" data-price="{{ section.settings.bundle_3_price }}" data-compare="{{ section.settings.bundle_3_compare }}" data-savings="{{ section.settings.bundle_3_save }}">
+            <div class="bundle-card" data-bundle="3" data-variant-id="{{ v3_id }}" data-qty="{% if product.variants.size >= 3 %}1{% else %}3{% endif %}" data-price="{{ section.settings.bundle_3_price }}" data-compare="{{ section.settings.bundle_3_compare }}" data-savings="{{ section.settings.bundle_3_save }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
               <div class="bundle-info">
                 <div class="bundle-title-row">
@@ -170,6 +198,24 @@
             </button>
           </div>
         </form>
+
+        <script id="foleaProductCatalog" type="application/json">
+        {
+          "hasProduct": {% if product != blank and product.empty? == false and current_variant != blank %}true{% else %}false{% endif %},
+          "productId": {{ product.id | json }},
+          "defaultVariantId": {{ resolved_variant_id | json }},
+          "variants": [
+            {%- for v in product.variants -%}
+              {
+                "id": {{ v.id }},
+                "title": {{ v.title | json }},
+                "price": {{ v.price }},
+                "available": {{ v.available | json }}
+              }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          ]
+        }
+        </script>
 
         <!-- Pakistani Trust Badges -->
         <div class="trust-grid">
@@ -234,6 +280,12 @@
       "type": "product",
       "id": "featured_product",
       "label": "Select Shopify Product"
+    },
+    {
+      "type": "text",
+      "id": "manual_variant_id",
+      "label": "Direct Shopify Variant ID (Fallback)",
+      "info": "Agar product picker se connect na ho, toh product variant ki ID yahan enter kar sakte hain."
     },
     {
       "type": "text",

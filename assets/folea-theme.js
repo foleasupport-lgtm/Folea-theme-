@@ -194,12 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
       itemsHTML += '</div>';
       cartDrawerBody.innerHTML = itemsHTML;
 
-      // Drawer item quantity listeners
+      // Drawer item quantity listeners (synced with real Shopify cart)
       cartDrawerBody.querySelectorAll('.cart-qty-minus').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const idx = parseInt(btn.getAttribute('data-index'), 10);
-          adjustLocalCartQty(idx, -1);
+          const currentVal = parseInt(btn.parentElement.querySelector('.cart-qty-val').textContent, 10) || 1;
+          updateShopifyCartLine(idx, currentVal - 1);
         });
       });
 
@@ -207,7 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const idx = parseInt(btn.getAttribute('data-index'), 10);
-          adjustLocalCartQty(idx, 1);
+          const currentVal = parseInt(btn.parentElement.querySelector('.cart-qty-val').textContent, 10) || 1;
+          updateShopifyCartLine(idx, currentVal + 1);
         });
       });
 
@@ -215,10 +217,30 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const idx = parseInt(btn.getAttribute('data-index'), 10);
-          removeLocalCartItem(idx);
+          updateShopifyCartLine(idx, 0);
         });
       });
     }
+  }
+
+  async function updateShopifyCartLine(lineIndex, newQuantity) {
+    try {
+      const res = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ line: lineIndex + 1, quantity: Math.max(0, newQuantity) })
+      });
+      if (res.ok) {
+        const updatedCart = await res.json();
+        saveLocalCart(updatedCart);
+        updateCartUI(updatedCart);
+        return;
+      }
+    } catch (e) {
+      console.warn('Shopify cart change sync warning:', e);
+    }
+    // Client fallback
+    adjustLocalCartQty(lineIndex, newQuantity - (getLocalCart().items[lineIndex]?.quantity || 1));
   }
 
   function adjustLocalCartQty(index, change) {
@@ -252,10 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
       bundleCards.forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
 
-      const qty = parseInt(card.getAttribute('data-qty')) || 1;
+      const cardVariantId = card.getAttribute('data-variant-id');
+      const qty = parseInt(card.getAttribute('data-qty'), 10) || 1;
       const price = card.getAttribute('data-price');
       const compare = card.getAttribute('data-compare');
       const savings = card.getAttribute('data-savings');
+
+      if (cardVariantId && cardVariantId.trim() !== '' && cardVariantId !== '1') {
+        if (foleaVariantId) foleaVariantId.value = cardVariantId;
+      }
 
       currentQuantity = qty;
       syncQuantity(qty);
@@ -295,30 +322,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Helper: Auto-detect available product variant ID from Shopify catalog
+  // Helper: Auto-detect available product variant ID from DOM, embedded catalog, or Shopify API
   async function resolveVariantId() {
     let vid = foleaVariantId ? foleaVariantId.value : null;
-    if (vid && vid.trim() !== '' && vid !== '1') return vid;
+    if (vid && vid.trim() !== '' && vid !== '1') return vid.trim();
+
+    // Check embedded catalog JSON
+    const catalogEl = document.getElementById('foleaProductCatalog');
+    if (catalogEl) {
+      try {
+        const cat = JSON.parse(catalogEl.textContent);
+        if (cat.defaultVariantId) {
+          vid = String(cat.defaultVariantId);
+          if (foleaVariantId) foleaVariantId.value = vid;
+          return vid;
+        }
+        if (cat.variants && cat.variants.length > 0) {
+          vid = String(cat.variants[0].id);
+          if (foleaVariantId) foleaVariantId.value = vid;
+          return vid;
+        }
+      } catch (e) {}
+    }
+
+    // Check Shopify /products.json catalog
     try {
-      const res = await fetch('/products.json?limit=5');
+      const res = await fetch('/products.json?limit=10');
       const data = await res.json();
       if (data.products && data.products.length > 0) {
         for (const p of data.products) {
           if (p.variants && p.variants.length > 0) {
-            vid = p.variants[0].id;
+            vid = String(p.variants[0].id);
             if (foleaVariantId) foleaVariantId.value = vid;
             return vid;
           }
         }
       }
     } catch (e) {
-      console.warn('Could not auto-resolve variant ID:', e);
+      console.warn('Could not auto-resolve variant ID via products.json:', e);
     }
-    return vid;
+
+    // Check current Shopify cart for any existing variant
+    try {
+      const cartRes = await fetch('/cart.js');
+      const cartData = await cartRes.json();
+      if (cartData.items && cartData.items.length > 0) {
+        vid = String(cartData.items[0].variant_id || cartData.items[0].id);
+        if (foleaVariantId) foleaVariantId.value = vid;
+        return vid;
+      }
+    } catch (e) {}
+
+    return null;
   }
 
   // ----------------------------------------------------
-  // 4. Enhanced "Add To Bag" Action (Shopify API + Persistent Local Fallback)
+  // 4. Enhanced "Add To Bag" Action (Shopify API + Drawer Opening)
   // ----------------------------------------------------
   if (addToCartBtn) {
     addToCartBtn.addEventListener('click', async () => {
@@ -329,7 +388,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const variantId = await resolveVariantId();
       const qty = currentQuantity || 1;
 
-      // Parse unit price in cents
+      if (!variantId) {
+        addToCartBtn.disabled = false;
+        addToCartBtn.innerHTML = originalText;
+        showToast("Product Required", "Shopify Admin me product Active karein.");
+        alert("⚠️ Shopify Product Missing:\n\nAapke Shopify Admin mein koi Active Product nahi mila ya theme mein select nahi hai.\n\nShopify Admin > Products mein ja kar product ko 'Active' karein aur Online Store sales channel ko check karein!");
+        return;
+      }
+
+      // Parse unit price in cents for local cache
       let unitPriceInCents = 295000;
       const displayPriceEl = document.getElementById('displayPrice') || document.getElementById('stickyPrice');
       if (displayPriceEl) {
@@ -339,99 +406,79 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Add to persistent client cart
-      const cart = getLocalCart();
-      const existingItem = cart.items.find(i => i.id === (variantId || 'folea-serum'));
-      const productImg = (mainProductImg && mainProductImg.src) ? mainProductImg.src : '';
-
-      if (existingItem) {
-        existingItem.quantity += qty;
-        existingItem.price = unitPriceInCents;
-      } else {
-        cart.items.push({
-          id: variantId || 'folea-serum',
-          variant_id: variantId,
-          title: 'Folea Anti-Frizz Hair Serum',
-          product_title: 'Folea Anti-Frizz Hair Serum',
-          price: unitPriceInCents,
-          quantity: qty,
-          featured_image: { url: productImg }
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            items: [{ id: Number(variantId), quantity: Number(qty) }]
+          })
         });
-      }
 
-      calculateCartTotals(cart);
-      saveLocalCart(cart);
-      updateCartUI(cart);
-
-      // Background Shopify Sync
-      if (variantId) {
-        try {
-          await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ items: [{ id: Number(variantId), quantity: Number(qty) }] })
-          });
-        } catch (e) {
-          // Handled silently
+        if (res.ok) {
+          await fetchCartData();
+          showToast("Added to Bag!", `${qty}x Folea Serum added.`);
+          openCartDrawer();
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          showToast("Cart Notice", errData.description || "Could not add item to bag.");
         }
+      } catch (err) {
+        console.error('Error adding to bag:', err);
+      } finally {
+        addToCartBtn.disabled = false;
+        addToCartBtn.innerHTML = originalText;
       }
-
-      addToCartBtn.disabled = false;
-      addToCartBtn.innerHTML = originalText;
-      showToast("Added to Bag!", `${qty}x Folea Serum added.`);
-      openCartDrawer();
     });
   }
 
   // ----------------------------------------------------
-  // 5. Checkout & Order Handlers (COD & Sticky Bar Linking)
+  // 5. Checkout & Order Handlers (COD & Direct Shopify Checkout)
   // ----------------------------------------------------
   async function executeOrderViaCheckout() {
+    const btnLabel = document.getElementById('btnTextLabel');
+    const originalBtnText = btnLabel ? btnLabel.textContent : 'ORDER VIA CASH ON DELIVERY';
+    const stickySpan = stickyOrderBtn ? stickyOrderBtn.querySelector('span') : null;
+    const originalStickyText = stickySpan ? stickySpan.textContent : 'ORDER COD';
+
     if (orderNowBtn) {
       orderNowBtn.disabled = true;
-      const label = document.getElementById('btnTextLabel');
-      if (label) label.textContent = 'PROCEEDING TO CHECKOUT...';
+      if (btnLabel) btnLabel.textContent = 'PROCEEDING TO CHECKOUT...';
     }
 
     if (stickyOrderBtn) {
       stickyOrderBtn.disabled = true;
-      const stickySpan = stickyOrderBtn.querySelector('span');
       if (stickySpan) stickySpan.textContent = 'CHECKOUT...';
     }
 
     const variantId = await resolveVariantId();
     const qty = currentQuantity || 1;
 
-    let unitPriceInCents = 295000;
-    const displayPriceEl = document.getElementById('displayPrice') || document.getElementById('stickyPrice');
-    if (displayPriceEl) {
-      const rawNum = parseInt(displayPriceEl.textContent.replace(/[^0-9]/g, ''), 10);
-      if (!isNaN(rawNum) && rawNum > 0) {
-        unitPriceInCents = Math.round((rawNum / qty) * 100);
+    // Handle missing product gracefully without locking button or showing raw 400 error
+    if (!variantId) {
+      if (orderNowBtn) {
+        orderNowBtn.disabled = false;
+        if (btnLabel) btnLabel.textContent = originalBtnText;
       }
+      if (stickyOrderBtn) {
+        stickyOrderBtn.disabled = false;
+        if (stickySpan) stickySpan.textContent = originalStickyText;
+      }
+
+      showToast("Shopify Product Missing", "Shopify Admin me product create/active karein.");
+      alert("⚠️ Shopify Product Missing / Not Active:\n\nShopify checkout initiate karne ke liye aapke store par kam az kam 1 product 'Active' hona zaroori hai.\n\nShopify Admin > Products mein ja kar product ko 'Active' karein aur Online Store sales channel ko check karein!");
+      return;
     }
 
-    const cart = getLocalCart();
-    const existing = cart.items.find(i => i.id === (variantId || 'folea-serum'));
-    if (existing) {
-      existing.quantity = Math.max(existing.quantity, qty);
-    } else {
-      cart.items.push({
-        id: variantId || 'folea-serum',
-        variant_id: variantId,
-        title: 'Folea Anti-Frizz Hair Serum',
-        product_title: 'Folea Anti-Frizz Hair Serum',
-        price: unitPriceInCents,
-        quantity: qty,
-        featured_image: { url: (mainProductImg && mainProductImg.src) ? mainProductImg.src : '' }
+    try {
+      // 1. Clear cart to ensure exact bundle and quantity is purchased
+      await fetch('/cart/clear.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
       });
-    }
-    calculateCartTotals(cart);
-    saveLocalCart(cart);
-    updateCartUI(cart);
 
-    if (variantId) {
-      fetch('/cart/add.js', {
+      // 2. Add exact variant and quantity to Shopify cart
+      const addRes = await fetch('/cart/add.js', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -443,21 +490,18 @@ document.addEventListener('DOMContentLoaded', () => {
             quantity: Number(qty)
           }]
         })
-      })
-      .then(() => {
-        window.location.href = '/checkout';
-      })
-      .catch(() => {
-        window.location.href = `/cart/${variantId}:${qty}?checkout`;
       });
-    } else {
-      const form = document.getElementById('foleaProductForm');
-      if (form) {
-        form.action = '/cart/add';
-        form.submit();
-      } else {
-        window.location.href = '/checkout';
+
+      if (!addRes.ok) {
+        throw new Error('Shopify cart add failed');
       }
+
+      // 3. Immediately redirect to Shopify Checkout
+      window.location.href = '/checkout';
+    } catch (err) {
+      console.warn('Direct checkout failed, using permalink fallback:', err);
+      // Fallback: direct permalink to Shopify checkout
+      window.location.href = `/cart/${variantId}:${qty}?checkout`;
     }
   }
 
@@ -480,7 +524,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const stickyMobileBar = document.getElementById('stickyMobileBar');
   if (stickyMobileBar) {
-    stickyMobileBar.addEventListener('click', () => {
+    stickyMobileBar.addEventListener('click', (e) => {
+      if (e.target.closest('#stickyOrderBtn')) return;
       executeOrderViaCheckout();
     });
   }
@@ -489,22 +534,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const drawerCheckoutBtns = document.querySelectorAll('.btn-checkout');
   drawerCheckoutBtns.forEach(btn => {
     btn.addEventListener('click', async (e) => {
-      const variantId = await resolveVariantId();
+      e.preventDefault();
       const localCart = getLocalCart();
-      const totalQty = localCart.item_count || currentQuantity || 1;
-      if (variantId) {
-        e.preventDefault();
-        try {
-          await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ items: [{ id: Number(variantId), quantity: Number(totalQty) }] })
-          });
-          window.location.href = '/checkout';
-        } catch (err) {
-          window.location.href = `/cart/${variantId}:${totalQty}?checkout`;
+      if (!localCart.items || localCart.items.length === 0) {
+        const liveCartRes = await fetch('/cart.js').then(r => r.json()).catch(() => ({ item_count: 0 }));
+        if (!liveCartRes.item_count || liveCartRes.item_count === 0) {
+          showToast("Bag is Empty", "Pehle koi item bag mein add karein.");
+          return;
         }
       }
+      window.location.href = '/checkout';
     });
   });
 
