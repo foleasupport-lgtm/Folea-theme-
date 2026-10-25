@@ -50,18 +50,7 @@
 
     <div class="drawer-footer">
       <div class="drawer-badge">🇵🇰 Nationwide Express Delivery</div>
-      
-      <!-- WhatsApp Live Typing Status Indicator -->
-      <div class="drawer-typing-status">
-        <span class="online-beacon" aria-hidden="true"></span>
-        <span class="typing-agent-name">Folea Support</span>
-        <span class="typing-status-text">is typing</span>
-        <span class="typing-wave-dots" aria-hidden="true">
-          <span class="wave-dot"></span>
-          <span class="wave-dot"></span>
-          <span class="wave-dot"></span>
-        </span>
-      </div>
+      <p class="drawer-info">Questions? Contact our team on WhatsApp:</p>
 
       <a href="https://wa.me/{{ section.settings.whatsapp_number | default: '923000000000' | replace: '+', '' | replace: ' ', '' | replace: '-', '' }}" target="_blank" rel="noopener noreferrer" class="drawer-whatsapp-btn wa-animated-btn">
         <div class="wa-btn-content">
