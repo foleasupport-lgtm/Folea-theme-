@@ -7,7 +7,9 @@
       </div>
       <div class="footer-links">
         <h4>Customer Care</h4>
-        <p>WhatsApp: <strong>{{ section.settings.whatsapp_number }}</strong></p>
+        {%- assign footer_wa_raw = section.settings.whatsapp_number | default: '+92337-6454098' | strip -%}
+        {%- assign footer_wa_clean = footer_wa_raw | replace: '+', '' | replace: ' ', '' | replace: '-', '' -%}
+        <p>WhatsApp: <a href="https://wa.me/{{ footer_wa_clean }}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;"><strong>{{ footer_wa_raw }}</strong></a></p>
         <p>Email: {{ section.settings.email }}</p>
         <p>Timing: {{ section.settings.timings }}</p>
       </div>
@@ -32,7 +34,7 @@
       "type": "text",
       "id": "whatsapp_number",
       "label": "WhatsApp Support Number",
-      "default": "+92 300 0000000"
+      "default": "+92337-6454098"
     },
     {
       "type": "text",
