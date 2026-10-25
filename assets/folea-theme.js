@@ -110,7 +110,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const drawerNavLinks = document.querySelectorAll('.drawer-nav a');
   drawerNavLinks.forEach(link => {
-    link.addEventListener('click', closeMobileNav);
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      closeMobileNav();
+      if (href && href.startsWith('#')) {
+        const targetEl = document.querySelector(href);
+        if (targetEl) {
+          e.preventDefault();
+          setTimeout(() => {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 120);
+        }
+      }
+    });
   });
 
   // ----------------------------------------------------
