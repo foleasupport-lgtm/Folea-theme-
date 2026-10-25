@@ -260,7 +260,7 @@ a {
 .cart-drawer {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 9999999;
   visibility: hidden;
   transition: visibility var(--transition-normal);
 }
@@ -368,9 +368,11 @@ a {
 }
 
 .drawer-footer {
-  padding: 20px 22px;
+  padding: 18px 22px;
+  padding-bottom: max(20px, calc(14px + env(safe-area-inset-bottom, 16px)));
   border-top: 1px solid var(--color-border);
   background: var(--color-bg);
+  flex-shrink: 0;
 }
 
 .drawer-badge {
@@ -393,10 +395,18 @@ a {
   gap: 8px;
   background: #25D366;
   color: #fff;
-  padding: 11px;
+  padding: 12px;
   border-radius: var(--radius-sm);
   font-weight: 700;
-  font-size: 13.5px;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.drawer-whatsapp-btn:hover {
+  background: #20bd5a;
+  transform: translateY(-1px);
 }
 
 /* Cart Drawer Body */
@@ -2240,6 +2250,17 @@ video::-webkit-media-controls {
   .sticky-mobile-bar {
     display: none !important;
   }
+}
+
+/* Hide sticky mobile bar completely when navigation or cart drawer is open */
+body.mobile-nav-open .sticky-mobile-bar,
+body.cart-drawer-open .sticky-mobile-bar,
+.sticky-mobile-bar.hidden-by-nav {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(120%) !important;
 }
 
 .sticky-inner {
