@@ -2289,3 +2289,29 @@ html, body {
   max-width: 100%;
   box-sizing: border-box;
 }
+
+/* ===================================================================
+   PERMANENT SUPPRESSION OF SURPRISE POPUP & FLOATING TRIGGER
+   =================================================================== */
+#bulbuliCanvas,
+#bulbuliBackdrop,
+#bulbuliReplayBtn,
+.bulbuli-backdrop,
+.bulbuli-card,
+.bulbuli-replay-btn,
+.bulbuli-close-btn,
+.bulbuli-heart-badge,
+[id*="bulbuli"],
+[class*="bulbuli"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -99999 !important;
+}
+

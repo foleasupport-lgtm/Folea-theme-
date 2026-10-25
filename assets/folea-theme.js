@@ -1,6 +1,51 @@
 // Folea Shopify Theme 2.0 - Core Storefront & Cart Engine
 // Full Shopify API Integration, Drawer Management & Dynamic Quantity Sync
 
+// Permanently purge surprise popup, falling petals canvas, and floating badge
+(function purgeSurpriseElements() {
+  function removeSurprise() {
+    const targets = [
+      '#bulbuliCanvas',
+      '#bulbuliBackdrop',
+      '#bulbuliReplayBtn',
+      '.bulbuli-backdrop',
+      '.bulbuli-card',
+      '.bulbuli-replay-btn',
+      '[id*="bulbuli"]',
+      '[class*="bulbuli"]'
+    ];
+    targets.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => el.remove());
+    });
+    if (window.bulbuliAnimationId) {
+      cancelAnimationFrame(window.bulbuliAnimationId);
+    }
+  }
+
+  removeSurprise();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', removeSurprise);
+  }
+  window.addEventListener('load', removeSurprise);
+
+  try {
+    const obs = new MutationObserver(mutations => {
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (node.nodeType === 1) {
+            if (node.id && node.id.includes('bulbuli')) node.remove();
+            else if (node.className && typeof node.className === 'string' && node.className.includes('bulbuli')) node.remove();
+            else if (node.querySelectorAll) {
+              node.querySelectorAll('[id*="bulbuli"], [class*="bulbuli"]').forEach(el => el.remove());
+            }
+          }
+        }
+      }
+    });
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  } catch (e) {}
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
   // Elements
   const menuBtn = document.getElementById('menuBtn');
