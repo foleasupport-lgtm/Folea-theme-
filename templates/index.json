@@ -150,12 +150,12 @@
       "settings": {
         "formula_tag": "FORMULATION TRANSPARENCY",
         "formula_title": "Key Active Ingredients",
-        "ing_1_name": "Moroccan Organic Argan Oil:",
-        "ing_1_desc": "Penetrates hair shafts to soften rough cuticles and seal split ends.",
-        "ing_2_name": "Golden Jojoba Seed Oil:",
-        "ing_2_desc": "Mimics natural scalp lipids to restore elasticity without heaviness.",
-        "ing_3_name": "Hydrolyzed Silk Keratin:",
-        "ing_3_desc": "Strengthens weak strands exposed to dyes and environmental pollutants.",
+        "ing_1_name": "Cyclomethicone:",
+        "ing_1_desc": "A lightweight silicone that helps distribute the serum evenly, leaving hair feeling smooth and silky without a heavy residue.",
+        "ing_2_name": "Dimethicone:",
+        "ing_2_desc": "Helps smooth the hair surface, tame frizz and flyaways, reduce friction and minimise the appearance of split ends while enhancing shine.",
+        "ing_3_name": "Golden Jojoba Seed Oil:",
+        "ing_3_desc": "Helps soften and condition hair, adding a touch of nourishment without weighing strands down.",
         "ing_4_name": "Pure Alpha-Tocopherol (Vitamin E):",
         "ing_4_desc": "Powerful antioxidant defense against UV and sun damage.",
         "shipping_tag": "ORDER & DELIVERY",
@@ -165,7 +165,7 @@
         "ship_1_desc": "Orders placed before 4 PM are packed and handed over to courier on the same day.",
         "ship_2_icon": "🚚",
         "ship_2_title": "Courier Partners:",
-        "ship_2_desc": "TCS, Leopards, and Trax with live SMS tracking sent to your WhatsApp.",
+        "ship_2_desc": "Post Ex and Lepards with live SMS tracking sent to your WhatsApp.",
         "ship_3_icon": "💵",
         "ship_3_title": "Cash on Delivery:",
         "ship_3_desc": "Inspect the parcel upon arrival and hand over cash to the courier rider.",
@@ -179,13 +179,13 @@
       "settings": {
         "sub_heading": "HOW TO USE",
         "title": "The 3-Step Folea Ritual",
-        "desc": "Less is more. A small pump goes a long way.",
-        "step_1_title": "Dispense",
-        "step_1_desc": "Press 1 to 2 pumps of serum onto your clean palm. (Start with 1 pump for fine hair).",
-        "step_2_title": "Warm & Activate",
-        "step_2_desc": "Rub hands gently together for 3 seconds to warm and evenly distribute the botanical oils.",
-        "step_3_title": "Glide & Gloss",
-        "step_3_desc": "Finger-comb through towel-dried or dry hair from mid-lengths to ends. Style as desired."
+        "desc": "Three simple steps to smoother, happier hair.",
+        "step_1_title": "Start with Slightly Damp or Dry Hair",
+        "step_1_desc": "Apply FOLEA to slightly damp or completely dry hair. Avoid applying to soaking wet hair for the best results.",
+        "step_2_title": "Apply Your Way",
+        "step_2_desc": "Dispense the amount suited to your hair length, thickness and texture. Distribute evenly through mid-lengths and ends.",
+        "step_3_title": "Smooth, Style & Shine",
+        "step_3_desc": "Gently run your fingers or a comb through your hair. Style as desired and enjoy smoother, softer, shinier hair with frizz and flyaways under control."
       }
     },
     "ugc_video_reviews": {
@@ -293,22 +293,43 @@
         "faq_1": {
           "type": "faq_item",
           "settings": {
-            "question": "How long does delivery take across Pakistan?",
-            "answer": "Delivery takes 2 to 4 business days. Major cities like Karachi, Lahore, and Islamabad/Rawalpindi usually receive deliveries within 48 hours via TCS and Leopards courier."
+            "question": "What does FOLEA Anti-Frizz Hair Serum do?",
+            "answer": "FOLEA helps tame frizz and flyaways, smooth the appearance of split ends, soften hair and enhance shine. Its lightweight formula leaves hair feeling smooth and manageable without a heavy, greasy finish."
           }
         },
         "faq_2": {
           "type": "faq_item",
           "settings": {
-            "question": "Is Cash on Delivery (COD) available?",
-            "answer": "Yes, 100%! You do not need to pay anything online. You pay the exact cash amount to the courier rider at your doorstep when you receive your package."
+            "question": "Can I use FOLEA every day?",
+            "answer": "Yes, FOLEA can be incorporated into your daily haircare routine whenever your hair needs extra smoothness, shine and frizz control."
           }
         },
         "faq_3": {
           "type": "faq_item",
           "settings": {
-            "question": "Will it make my hair oily, flat, or greasy?",
-            "answer": "No. Folea is formulated with ultra-lightweight dry botanical silicones and cold-pressed oils. It absorbs immediately into the cuticle, leaving a featherlight gloss without greasiness or weighing hair down."
+            "question": "Is FOLEA suitable for all hair types?",
+            "answer": "Yes! FOLEA is designed for different hair types and textures, including straight, wavy, curly and frizz-prone hair."
+          }
+        },
+        "faq_item_WkkMnJ": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will FOLEA make my hair greasy or oily?",
+            "answer": "FOLEA is designed with a lightweight, non-greasy feel. When applied appropriately, it helps smooth your hair without leaving it feeling oily or weighed down."
+          }
+        },
+        "faq_item_L7JPmF": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How much serum should I use?",
+            "answer": "The amount depends on your hair length, thickness and texture. Use an amount suited to your hair and distribute it evenly through the mid-lengths and ends."
+          }
+        },
+        "faq_item_V8QU64": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Should I apply FOLEA to wet or dry hair?",
+            "answer": "Apply FOLEA to slightly damp or completely dry hair. Avoid applying it to soaking wet hair."
           }
         },
         "faq_4": {
@@ -318,11 +339,32 @@
             "answer": "Absolutely. Folea is free from harsh sulfates, parabens, and drying alcohols. It provides intense thermal and UV protection for keratin-treated, rebonded, and dyed hair."
           }
         },
+        "faq_item_Pq4wBQ": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Does FOLEA help with split ends?",
+            "answer": "FOLEA helps smooth the appearance of split ends, making hair look more polished and healthier. However, it does not permanently repair split ends."
+          }
+        },
         "faq_5": {
           "type": "faq_item",
           "settings": {
             "question": "What if I am not satisfied with the product?",
             "answer": "We stand behind our quality with a 7-Day Checking Warranty. If your item arrives damaged or you encounter any issue, contact our WhatsApp support for a quick, hassle-free replacement or return."
+          }
+        },
+        "faq_item_PWw3Ew": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does delivery take across Pakistan?",
+            "answer": "Delivery takes 2 to 4 business days. Major cities like Karachi, Lahore, and Islamabad/Rawalpindi usually receive deliveries within 48 hours via TCS and Leopards courier."
+          }
+        },
+        "faq_item_XzFf3g": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you offer Cash on Delivery (COD)?",
+            "answer": "Yes! We offer Cash on Delivery across Pakistan. You can conveniently pay when your order arrives at your doorstep."
           }
         }
       },
@@ -330,8 +372,14 @@
         "faq_1",
         "faq_2",
         "faq_3",
+        "faq_item_WkkMnJ",
+        "faq_item_L7JPmF",
+        "faq_item_V8QU64",
         "faq_4",
-        "faq_5"
+        "faq_item_Pq4wBQ",
+        "faq_5",
+        "faq_item_PWw3Ew",
+        "faq_item_XzFf3g"
       ],
       "settings": {
         "sub_heading": "HAVE QUESTIONS?",
