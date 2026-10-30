@@ -1,7 +1,47 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_accent": "#C26D4D",
     "color_primary": "#161514",
-    "color_bg": "#FAF7F2"
+    "color_bg": "#FAF7F2",
+    "sections": {
+      "folea-announcement": {
+        "type": "folea-announcement",
+        "settings": {
+          "bg_color": "#ece5d8",
+          "text_color": "#161514",
+          "text_1": "⚡ FREE EXPRESS DELIVERY ALL OVER PAKISTAN",
+          "text_2": "💵 CASH ON DELIVERY AVAILABLE NATIONWIDE",
+          "text_3": "🌿 100% SATISFACTION OR 7-DAYS MONEY BACK GUARANTEE",
+          "text_4": "✨ 72-HOUR FRIZZ CONTROL FORMULA"
+        }
+      },
+      "folea-header": {
+        "type": "folea-header",
+        "settings": {
+          "logo_height": 36,
+          "tagline": "THOUGHTFULLY FORMULATED. BEAUTIFULLY SIMPLE.",
+          "whatsapp_number": "+92337-6454098"
+        }
+      },
+      "folea-footer": {
+        "type": "folea-footer",
+        "settings": {
+          "about_text": "Thoughtfully formulated. Beautifully simple. Official store for Pakistan.",
+          "whatsapp_number": "+92337-6454098",
+          "email": "foleasupport@gmail.com",
+          "timings": "Mon - Sat: 10:00 AM - 7:00 PM"
+        }
+      }
+    },
+    "content_for_index": []
   }
 }
