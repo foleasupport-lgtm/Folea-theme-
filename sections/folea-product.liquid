@@ -161,7 +161,9 @@
 
           <!-- Bundle Selector (Synced with Shopify Quantity & Variants) -->
           <div class="bundle-selector">
-            <div class="bundle-header">{{ section.settings.bundle_header_text | default: 'SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):' }}</div>
+            {%- if section.settings.bundle_header_text != blank -%}
+              <div class="bundle-header">{{ section.settings.bundle_header_text }}</div>
+            {%- endif -%}
             
             <div class="bundle-card selected" data-bundle="1" data-variant-id="{{ v1_id }}" data-bottles="1" data-qty="1" data-price="{% if product.variants.size >= 1 and v1.price %}{{ v1.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}" data-compare="{% if product.variants.size >= 1 and v1.compare_at_price %}{{ v1.compare_at_price | money }}{% else %}{{ section.settings.bundle_1_compare }}{% endif %}" data-savings="{{ section.settings.bundle_1_save }}" data-discount="{{ section.settings.bundle_1_discount_code | strip }}">
               <div class="bundle-radio"><span class="radio-dot"></span></div>
@@ -458,8 +460,8 @@
     {
       "type": "text",
       "id": "bundle_header_text",
-      "label": "Bundle Header Label",
-      "default": "SELECT SPECIAL DEAL (FREE SHIPPING ON 2+):"
+      "label": "Bundle Header Label (Leave blank to hide)",
+      "default": ""
     },
     {
       "type": "header",
