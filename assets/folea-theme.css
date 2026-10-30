@@ -1059,11 +1059,7 @@ video::-webkit-media-controls {
 }
 
 .bundle-header {
-  font-size: 11.5px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: var(--color-text-muted);
-  margin-bottom: 10px;
+  display: none !important;
 }
 
 .bundle-card {
