@@ -63,9 +63,9 @@
           {%- if product.featured_image != blank -%}
             <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title }}" id="mainProductImg" class="main-product-img">
           {%- elsif section.settings.custom_image_1 != blank -%}
-            <img src="{{ section.settings.custom_image_1 | image_url: width: 1200 }}" alt="Folea Bottle" id="mainProductImg" class="main-product-img">
+            <img src="{{ section.settings.custom_image_1 | image_url: width: 1200 }}" alt="Folea’ Bottle" id="mainProductImg" class="main-product-img">
           {%- else -%}
-            <img src="{{ 'folea-bottle.jpg' | asset_url }}" alt="Folea Anti-Frizz Hair Serum" id="mainProductImg" class="main-product-img">
+            <img src="{{ 'folea-bottle.jpg' | asset_url }}" alt="Folea’ Anti-Frizz Hair Serum" id="mainProductImg" class="main-product-img">
           {%- endif -%}
         </div>
 
@@ -344,7 +344,7 @@
 <div class="sticky-mobile-bar" id="stickyMobileBar">
   <div class="sticky-inner">
     <div class="sticky-thumb-info">
-      <img src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 100 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 100 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Folea Thumbnail">
+      <img src="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 100 }}{% elsif section.settings.custom_image_1 != blank %}{{ section.settings.custom_image_1 | image_url: width: 100 }}{% else %}{{ 'folea-bottle.jpg' | asset_url }}{% endif %}" alt="Folea’ Thumbnail">
       <div>
         <div class="sticky-title">{% if product.title != blank %}{{ product.title }}{% else %}{{ section.settings.product_title }}{% endif %}</div>
         <div class="sticky-price" id="stickyPrice">{% if product.variants.size >= 1 and v1.price %}{{ v1.price | money }}{% else %}{{ section.settings.bundle_1_price }}{% endif %}</div>
@@ -362,7 +362,7 @@
   <div class="toast-icon">✓</div>
   <div>
     <h4 id="toastTitle">Item Added to Bag!</h4>
-    <p id="toastMessage">Folea Serum was successfully added to your cart.</p>
+    <p id="toastMessage">Folea’ Serum was successfully added to your cart.</p>
   </div>
 </div>
 

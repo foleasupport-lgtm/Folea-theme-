@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cartDrawerBody.innerHTML = `
         <div class="cart-empty-state">
           <p>Your bag is empty.</p>
-          <a href="#productSection" class="btn-primary-small" onclick="document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow='';">Order Folea Serum</a>
+          <a href="#productSection" class="btn-primary-small" onclick="document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow='';">Order Folea’ Serum</a>
         </div>
       `;
     } else {
@@ -259,9 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         itemsHTML += `
           <div class="drawer-cart-item" data-index="${index}">
-            <img src="${imgSrc}" alt="${item.title || 'Folea Serum'}">
+            <img src="${imgSrc}" alt="${item.title || 'Folea’ Serum'}">
             <div class="item-details" style="flex:1;">
-              <h4>${item.product_title || item.title || 'Folea Anti-Frizz Hair Serum'}</h4>
+              <h4>${item.product_title || item.title || 'Folea’ Anti-Frizz Hair Serum'}</h4>
               <div class="item-price">${itemLinePrice} <span style="font-size:11px; font-weight:400; color:#888;">(${itemUnitPrice} each)</span></div>
               <div class="drawer-qty-control" style="display:inline-flex; align-items:center; gap:8px; margin-top:6px; background:#f4f0eb; padding:2px 8px; border-radius:14px;">
                 <button type="button" class="cart-qty-btn cart-qty-minus" data-index="${index}" style="border:none; background:none; font-size:16px; font-weight:bold; cursor:pointer; line-height:1; padding:2px 4px;">−</button>
