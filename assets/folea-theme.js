@@ -770,16 +770,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // FAQs
-  faqItems.forEach(item => {
-    const question = item.querySelector('.faq-question');
-    if (question) {
-      question.addEventListener('click', () => {
-        const isActive = item.classList.contains('active');
-        faqItems.forEach(i => i.classList.remove('active'));
-        if (!isActive) item.classList.add('active');
-      });
-    }
-  });
+  function initFaqItems(scope) {
+    const root = scope || document;
+    const items = root.querySelectorAll('.faq-item');
+    items.forEach(item => {
+      if (item.dataset.faqInit === 'true') return;
+      item.dataset.faqInit = 'true';
+      const question = item.querySelector('.faq-question');
+      if (question) {
+        question.addEventListener('click', () => {
+          const isActive = item.classList.contains('active');
+          items.forEach(i => {
+            i.classList.remove('active');
+            const q = i.querySelector('.faq-question');
+            if (q) q.setAttribute('aria-expanded', 'false');
+          });
+          if (!isActive) {
+            item.classList.add('active');
+            question.setAttribute('aria-expanded', 'true');
+          }
+        });
+      }
+    });
+  }
+
+  initFaqItems();
 
   // ----------------------------------------------------
   // 7. Interactive Before & After Slider
@@ -1008,9 +1023,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Listen for Shopify Customizer Section reload events
   document.addEventListener('shopify:section:load', (e) => {
     initUgcVideoReviews(e.target);
+    initFaqItems(e.target);
   });
   document.addEventListener('shopify:block:select', (e) => {
     initUgcVideoReviews(e.target);
+    initFaqItems(e.target);
   });
 
   // Load initial cart count
