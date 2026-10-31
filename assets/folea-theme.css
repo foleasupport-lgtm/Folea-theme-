@@ -1007,7 +1007,7 @@ video::-webkit-media-controls {
 
 .price-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
   margin-bottom: 16px;
   flex-wrap: wrap;
@@ -1018,13 +1018,44 @@ video::-webkit-media-controls {
   font-weight: 800;
   color: var(--color-primary);
   letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.compare-price-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 4px;
+  line-height: 1;
+}
+
+.launch-offer-badge {
+  background: var(--color-accent);
+  color: #FFFFFF;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 2.5px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.1;
+  box-shadow: 0 2px 6px rgba(194, 109, 77, 0.25);
+  white-space: nowrap;
+}
+
+.launch-offer-badge:empty {
+  display: none !important;
 }
 
 .compare-price {
-  font-size: 19px;
+  font-size: 18px;
   color: var(--color-text-muted);
   text-decoration: line-through;
   opacity: 0.7;
+  line-height: 1.1;
 }
 
 .discount-pill {

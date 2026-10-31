@@ -123,13 +123,18 @@
               {{ section.settings.bundle_1_price }}
             {%- endif -%}
           </span>
-          <span class="compare-price" id="displayComparePrice">
-            {%- if product.variants.size >= 1 and v1.compare_at_price -%}
-              {{ v1.compare_at_price | money }}
-            {%- else -%}
-              {{ section.settings.bundle_1_compare }}
+          <div class="compare-price-stack">
+            {%- if section.settings.price_badge_text != blank -%}
+              <span class="launch-offer-badge" id="displayOfferBadge">{{ section.settings.price_badge_text }}</span>
             {%- endif -%}
-          </span>
+            <span class="compare-price" id="displayComparePrice">
+              {%- if product.variants.size >= 1 and v1.compare_at_price -%}
+                {{ v1.compare_at_price | money }}
+              {%- else -%}
+                {{ section.settings.bundle_1_compare }}
+              {%- endif -%}
+            </span>
+          </div>
           <span class="discount-pill" id="displayDiscount"{% if section.settings.bundle_1_save == blank %} style="display: none;"{% endif %}>
             {{- section.settings.bundle_1_save -}}
           </span>
@@ -412,6 +417,13 @@
       "id": "sale_badge_text",
       "label": "Sale Badge Text",
       "default": "SALE • SAVE 33%"
+    },
+    {
+      "type": "text",
+      "id": "price_badge_text",
+      "label": "Price Tag Offer Badge (Above Compare Price)",
+      "default": "LAUNCH OFFER",
+      "info": "Leave blank to hide this badge. e.g. LAUNCH OFFER, LIMITED OFFER"
     },
     {
       "type": "text",
