@@ -43,7 +43,7 @@
         "bundle_1_discount_code": "",
         "bundle_1_badge": "Save 15%",
         "bundle_1_title": "Starter Pack (1 Bottle) ",
-        "bundle_1_sub": "Ideal for 30 days daily styling",
+        "bundle_1_sub": "",
         "bundle_1_price": "Rs. 1,999",
         "bundle_1_compare": "Rs. 2,999",
         "bundle_1_save": "",
@@ -51,7 +51,7 @@
         "bundle_2_discount_code": "",
         "bundle_2_badge": "Save 30%",
         "bundle_2_title": "Duo Pack (2 Bottles)",
-        "bundle_2_sub": "Free Nationwide Express Delivery included",
+        "bundle_2_sub": "",
         "bundle_2_price": "Rs. 3,599",
         "bundle_2_compare": "Rs. 5,998",
         "bundle_2_save": "SAVE EXTRA RS. 400 + FREE DELIVERY",
@@ -59,7 +59,7 @@
         "bundle_3_discount_code": "",
         "bundle_3_badge": "Save 40%",
         "bundle_3_title": "Trio Pack (3 Bottles)",
-        "bundle_3_sub": "1 Bottle completely FREE + VIP Gift Bag",
+        "bundle_3_sub": "",
         "bundle_3_price": "Rs. 4,999",
         "bundle_3_compare": "Rs. 8,997",
         "bundle_3_save": "BUY 2 GET 1 FREE",
@@ -97,7 +97,7 @@
           "settings": {
             "icon": "💧",
             "title": "Weightless Glass Finish",
-            "desc": "Micro-botanical silicones and cold-pressed oils provide high-mirror shine with zero greasy residue."
+            "desc": "Micro-botanical silicones provide high-mirror shine with zero greasy residue."
           }
         },
         "benefit_3": {
@@ -112,8 +112,8 @@
           "type": "benefit",
           "settings": {
             "icon": "🌿",
-            "title": "Cold-Pressed Botanical Trio",
-            "desc": "Rich in Moroccan Argan Oil, Golden Jojoba, and Vitamin E to deeply nourish damaged ends."
+            "title": "Softness & Natural Shine",
+            "desc": "Enriched with jojoba oil and Vitamin E to help soften hair, smooth dry ends and enhance shine."
           }
         }
       },
