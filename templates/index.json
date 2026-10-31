@@ -193,37 +193,41 @@
         "ugc_1": {
           "type": "video_card",
           "settings": {
+            "video": "shopify://files/videos/WhatsApp Video 2026-10-31 at 5.52.27 PM.mp4",
             "video_url": "",
-            "author_name": "Zoya K.",
+            "author_name": "Zainab",
             "author_city": "Lahore • Verified Buyer",
-            "caption": "My holy grail for Karachi humidity. Not sticky at all!"
+            "caption": "\"My hair gets so frizzy in this weather, but this serum actually makes a difference. And the best part? It doesn't feel oily or sticky.\""
           }
         },
         "ugc_2": {
           "type": "video_card",
           "settings": {
+            "video": "shopify://files/videos/IMG_3178.MP4",
             "video_url": "",
-            "author_name": "Hira T.",
+            "author_name": "Samia",
             "author_city": "Islamabad • Verified Buyer",
-            "caption": "Look at this shine! Blowouts last 3 full days now."
+            "caption": "\"Really liked the lightweight texture. My flyaways look much more settled and my hair feels softer. Definitely a nice addition to my hair routine.\""
           }
         },
         "ugc_3": {
           "type": "video_card",
           "settings": {
+            "video": "shopify://files/videos/IMG_3177.MP4",
             "video_url": "",
-            "author_name": "Ayesha M.",
+            "author_name": "Tahira",
             "author_city": "Karachi • Verified Buyer",
-            "caption": "Best serum in Pakistan right now. Bottle looks so aesthetic."
+            "caption": "\"Been using it before blow-drying and I love how soft my hair feels. It gives such a nice shine without weighing my hair down.\""
           }
         },
         "ugc_4": {
           "type": "video_card",
           "settings": {
+            "video": "shopify://files/videos/IMG_3176.MOV",
             "video_url": "",
-            "author_name": "Dr. Sana R.",
+            "author_name": "Aliza Ashfaq",
             "author_city": "Rawalpindi • Verified Buyer",
-            "caption": "Clean ingredients, no alcohol burn or greasy buildup."
+            "caption": "\"Used it before styling my hair and really liked the results. Gives a lovely smooth finish without making the hair flat.\""
           }
         }
       },
@@ -249,7 +253,7 @@
             "initials": "FN",
             "date_city": "Karachi • 2 days ago",
             "headline": "Finally something that beats Karachi humidity!",
-            "body": "I have frizzy wavy hair and every monsoon season my hair turns into a puffball. Two drops of Folea’ after towel drying and my hair stayed sleek even outdoors. Delivery took only 2 days via TCS!"
+            "body": "\"I have naturally wavy hair and usually struggle with frizz. This makes my hair look more put together without losing its natural movement.\""
           }
         },
         "rev_2": {
