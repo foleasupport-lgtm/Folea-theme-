@@ -130,7 +130,9 @@
               {{ section.settings.bundle_1_compare }}
             {%- endif -%}
           </span>
-          <span class="discount-pill" id="displayDiscount">{{ section.settings.bundle_1_save }}</span>
+          <span class="discount-pill" id="displayDiscount"{% if section.settings.bundle_1_save == blank %} style="display: none;"{% endif %}>
+            {{- section.settings.bundle_1_save -}}
+          </span>
         </div>
 
         {%- for block in section.blocks -%}
@@ -141,10 +143,18 @@
           {%- endif -%}
         {%- endfor -%}
 
-        <div class="urgency-banner">
-          <span class="flame-icon">{{ section.settings.urgency_icon | default: '🔥' }}</span>
-          <span>{{ section.settings.urgency_prefix | default: 'High Demand: Only' }} <strong class="pulse-num">{{ section.settings.stock_left | default: '14' }} {{ section.settings.urgency_unit | default: 'bottles' }}</strong> {{ section.settings.urgency_suffix | default: 'left in this batch.' }}</span>
-        </div>
+        {%- if section.settings.show_urgency != false and section.settings.stock_left != blank -%}
+          <div class="urgency-banner">
+            {%- if section.settings.urgency_icon != blank -%}
+              <span class="flame-icon">{{ section.settings.urgency_icon }}</span>
+            {%- endif -%}
+            <span>
+              {%- if section.settings.urgency_prefix != blank %}{{ section.settings.urgency_prefix }} {% endif -%}
+              <strong class="pulse-num">{{ section.settings.stock_left }}{% if section.settings.urgency_unit != blank %} {{ section.settings.urgency_unit }}{% endif %}</strong>
+              {%- if section.settings.urgency_suffix != blank %} {{ section.settings.urgency_suffix }}{% endif -%}
+            </span>
+          </div>
+        {%- endif -%}
 
         {%- for block in section.blocks -%}
           {%- if block.type == 'custom_liquid' and block.settings.position == 'below_urgency' -%}
@@ -420,6 +430,12 @@
       "content": "Urgency Stock Banner"
     },
     {
+      "type": "checkbox",
+      "id": "show_urgency",
+      "label": "Show Urgency Stock Banner",
+      "default": true
+    },
+    {
       "type": "text",
       "id": "urgency_icon",
       "label": "Urgency Icon",
@@ -496,8 +512,8 @@
     {
       "type": "text",
       "id": "bundle_1_save",
-      "label": "Bundle 1 Savings Pill",
-      "default": "SAVE RS. 1,000"
+      "label": "Bundle 1 Savings Pill (Optional)",
+      "info": "Leave blank to hide the savings pill"
     },
     {
       "type": "header",
@@ -548,8 +564,8 @@
     {
       "type": "text",
       "id": "bundle_2_save",
-      "label": "Bundle 2 Savings Pill",
-      "default": "SAVE EXTRA RS. 400 + FREE DELIVERY"
+      "label": "Bundle 2 Savings Pill (Optional)",
+      "info": "Leave blank to hide the savings pill"
     },
     {
       "type": "header",
@@ -600,8 +616,8 @@
     {
       "type": "text",
       "id": "bundle_3_save",
-      "label": "Bundle 3 Savings Pill",
-      "default": "BUY 2 GET 1 FREE"
+      "label": "Bundle 3 Savings Pill (Optional)",
+      "info": "Leave blank to hide the savings pill"
     },
     {
       "type": "header",

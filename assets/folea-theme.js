@@ -390,7 +390,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (displayPrice && price) displayPrice.textContent = price;
       if (displayComparePrice && compare) displayComparePrice.textContent = compare;
-      if (displayDiscount && savings) displayDiscount.textContent = savings.toUpperCase();
+      if (displayDiscount) {
+        if (savings && savings.trim() !== '') {
+          displayDiscount.textContent = savings.trim().toUpperCase();
+          displayDiscount.style.display = 'inline-block';
+        } else {
+          displayDiscount.textContent = '';
+          displayDiscount.style.display = 'none';
+        }
+      }
       if (stickyPrice && price) stickyPrice.textContent = price;
     });
   });
@@ -413,7 +421,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (displayPrice && initPrice) displayPrice.textContent = initPrice;
     if (displayComparePrice && initCompare) displayComparePrice.textContent = initCompare;
-    if (displayDiscount && initSavings) displayDiscount.textContent = initSavings.toUpperCase();
+    if (displayDiscount) {
+      if (initSavings && initSavings.trim() !== '') {
+        displayDiscount.textContent = initSavings.trim().toUpperCase();
+        displayDiscount.style.display = 'inline-block';
+      } else {
+        displayDiscount.textContent = '';
+        displayDiscount.style.display = 'none';
+      }
+    }
     if (stickyPrice && initPrice) stickyPrice.textContent = initPrice;
     updateBundleRealQuantity();
   }
@@ -802,10 +818,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ----------------------------------------------------
-  // 8. UGC Video Reviews Interactive Player (Immediate Audio + Responsive Play/Pause/Resume)
+  // 8. UGC Video Reviews Interactive Player (Immediate Audio + Responsive Play/Pause/Resume, Unlimited Cards)
   // ----------------------------------------------------
-  const ugcCards = document.querySelectorAll('.ugc-card');
-  const allUgcVideos = document.querySelectorAll('.ugc-native-video');
   let currentPlayingVideo = null;
 
   async function toggleUgcVideo(card, thumb, video) {
@@ -813,11 +827,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const playIcon = card.querySelector('.play-icon');
     const pauseIcon = card.querySelector('.pause-icon');
+    const allVideos = document.querySelectorAll('.ugc-native-video');
 
     // If currently paused, PLAY / RESUME
     if (video.paused || video.ended) {
       // Pause any other playing video in the carousel
-      allUgcVideos.forEach(v => {
+      allVideos.forEach(v => {
         if (v !== video && !v.paused) {
           try {
             v.pause();
@@ -869,55 +884,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  ugcCards.forEach(card => {
-    const thumb = card.querySelector('.ugc-thumb');
-    const video = card.querySelector('.ugc-native-video');
-    const progressBar = card.querySelector('.ugc-progress-bar');
-    const playIcon = card.querySelector('.play-icon');
-    const pauseIcon = card.querySelector('.pause-icon');
+  function initUgcVideoReviews(scope) {
+    const root = scope || document;
+    const cards = root.querySelectorAll('.ugc-card');
 
-    if (!video || !thumb) return;
+    cards.forEach(card => {
+      if (card.dataset.ugcInitialized === 'true') return;
+      card.dataset.ugcInitialized = 'true';
 
-    // Timeupdate for progress bar
-    video.addEventListener('timeupdate', () => {
-      if (progressBar && video.duration) {
-        const pct = (video.currentTime / video.duration) * 100;
-        progressBar.style.width = `${pct}%`;
-      }
+      const thumb = card.querySelector('.ugc-thumb');
+      const video = card.querySelector('.ugc-native-video');
+      const progressBar = card.querySelector('.ugc-progress-bar');
+      const playIcon = card.querySelector('.play-icon');
+      const pauseIcon = card.querySelector('.pause-icon');
+
+      if (!video || !thumb) return;
+
+      // Timeupdate for progress bar
+      video.addEventListener('timeupdate', () => {
+        if (progressBar && video.duration) {
+          const pct = (video.currentTime / video.duration) * 100;
+          progressBar.style.width = `${pct}%`;
+        }
+      });
+
+      // Reset when video ends
+      video.addEventListener('ended', () => {
+        thumb.classList.remove('is-playing');
+        if (playIcon) playIcon.style.display = 'inline';
+        if (pauseIcon) pauseIcon.style.display = 'none';
+        if (progressBar) progressBar.style.width = '0%';
+      });
+
+      // Touch & click handling (differentiates swipe scrolling from tapping)
+      let touchMoved = false;
+      let touchStartTime = 0;
+      let lastTouchEnd = 0;
+
+      thumb.addEventListener('touchstart', () => {
+        touchMoved = false;
+        touchStartTime = Date.now();
+      }, { passive: true });
+
+      thumb.addEventListener('touchmove', () => {
+        touchMoved = true;
+      }, { passive: true });
+
+      thumb.addEventListener('touchend', (e) => {
+        // If user was swiping the carousel, do not trigger play/pause
+        if (touchMoved || (Date.now() - touchStartTime > 350)) return;
+        lastTouchEnd = Date.now();
+        e.preventDefault();
+        toggleUgcVideo(card, thumb, video);
+      });
+
+      thumb.addEventListener('click', (e) => {
+        // Prevent duplicate firing on mobile devices after touchend
+        if (Date.now() - lastTouchEnd < 400) return;
+        toggleUgcVideo(card, thumb, video);
+      });
     });
+  }
 
-    // Reset when video ends
-    video.addEventListener('ended', () => {
-      thumb.classList.remove('is-playing');
-      if (playIcon) playIcon.style.display = 'inline';
-      if (pauseIcon) pauseIcon.style.display = 'none';
-      if (progressBar) progressBar.style.width = '0%';
-    });
+  // Initialize UGC video reviews immediately
+  initUgcVideoReviews();
 
-    // Touch & click handling (differentiates swipe scrolling from tapping)
-    let touchMoved = false;
-    let touchStartTime = 0;
-
-    thumb.addEventListener('touchstart', () => {
-      touchMoved = false;
-      touchStartTime = Date.now();
-    }, { passive: true });
-
-    thumb.addEventListener('touchmove', () => {
-      touchMoved = true;
-    }, { passive: true });
-
-    thumb.addEventListener('touchend', (e) => {
-      // If user was swiping the carousel, do not trigger play/pause
-      if (touchMoved || (Date.now() - touchStartTime > 350)) return;
-      e.preventDefault();
-      toggleUgcVideo(card, thumb, video);
-    });
-
-    thumb.addEventListener('click', () => {
-      // For desktop pointer clicks
-      toggleUgcVideo(card, thumb, video);
-    });
+  // Listen for Shopify Customizer Section reload events
+  document.addEventListener('shopify:section:load', (e) => {
+    initUgcVideoReviews(e.target);
+  });
+  document.addEventListener('shopify:block:select', (e) => {
+    initUgcVideoReviews(e.target);
   });
 
   // Load initial cart count

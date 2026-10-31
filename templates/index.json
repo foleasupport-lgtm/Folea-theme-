@@ -34,6 +34,7 @@
         "sale_badge_text": "SALE • SAVE 33%",
         "rating_score": "4.9 / 5.0",
         "rating_count": "1,240+ Verified Reviews",
+        "show_urgency": true,
         "urgency_icon": "🔥",
         "urgency_prefix": "High Demand: Only",
         "stock_left": "14",
@@ -54,7 +55,7 @@
         "bundle_2_sub": "",
         "bundle_2_price": "Rs. 3,599",
         "bundle_2_compare": "Rs. 5,998",
-        "bundle_2_save": "SAVE EXTRA RS. 400 + FREE DELIVERY",
+        "bundle_2_save": "",
         "bundle_3_variant_id": "",
         "bundle_3_discount_code": "",
         "bundle_3_badge": "Save 40%",
@@ -229,13 +230,53 @@
             "author_city": "Rawalpindi • Verified Buyer",
             "caption": "\"Used it before styling my hair and really liked the results. Gives a lovely smooth finish without making the hair flat.\""
           }
+        },
+        "ugc_5": {
+          "type": "video_card",
+          "settings": {
+            "video_url": "",
+            "author_name": "Mahnoor B.",
+            "author_city": "Faisalabad • Verified Buyer",
+            "caption": "One pump gave my rough hair instant glass shine!"
+          }
+        },
+        "ugc_6": {
+          "type": "video_card",
+          "settings": {
+            "video_url": "",
+            "author_name": "Alishba S.",
+            "author_city": "Multan • Verified Buyer",
+            "caption": "Survives intense humidity and heat without turning sticky."
+          }
+        },
+        "ugc_7": {
+          "type": "video_card",
+          "settings": {
+            "video_url": "",
+            "author_name": "Khadija W.",
+            "author_city": "Peshawar • Verified Buyer",
+            "caption": "Smooth blowout finish in less than 2 minutes."
+          }
+        },
+        "ugc_8": {
+          "type": "video_card",
+          "settings": {
+            "video_url": "",
+            "author_name": "Rabia N.",
+            "author_city": "Sialkot • Verified Buyer",
+            "caption": "Best investment for everyday salon finish at home."
+          }
         }
       },
       "block_order": [
         "ugc_1",
         "ugc_2",
         "ugc_3",
-        "ugc_4"
+        "ugc_4",
+        "ugc_5",
+        "ugc_6",
+        "ugc_7",
+        "ugc_8"
       ],
       "settings": {
         "sub_heading": "REAL EXPERIENCES",
