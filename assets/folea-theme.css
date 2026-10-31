@@ -1974,6 +1974,38 @@ video::-webkit-media-controls {
   transform: translate(-50%, -50%) scale(1);
 }
 
+/* UGC Loading Spinner */
+.ugc-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: ugcSpin 0.75s linear infinite;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+@keyframes ugcSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.ugc-thumb.is-loading .ugc-play-overlay {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate(-50%, -50%) scale(1) !important;
+}
+
+.ugc-thumb.is-loading .play-icon,
+.ugc-thumb.is-loading .pause-icon {
+  display: none !important;
+}
+
+.ugc-thumb.is-loading .ugc-spinner {
+  display: inline-block !important;
+}
+
 /* Progress bar */
 .ugc-progress-track {
   position: absolute;

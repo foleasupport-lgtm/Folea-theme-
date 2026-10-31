@@ -37,10 +37,11 @@
                 <img src="{{ 'folea-ugc-1.jpg' | asset_url }}" alt="Review Video" class="ugc-poster-img">
               {%- endif -%}
 
-              <!-- Play / Pause Overlay Icon -->
+              <!-- Play / Pause / Loading Overlay Icon -->
               <div class="ugc-play-overlay">
                 <span class="play-icon">▶</span>
                 <span class="pause-icon" style="display:none;">❚❚</span>
+                <span class="ugc-spinner" style="display:none;" aria-hidden="true"></span>
               </div>
 
               <!-- Real-time Progress Bar -->

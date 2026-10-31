@@ -827,6 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const playIcon = card.querySelector('.play-icon');
     const pauseIcon = card.querySelector('.pause-icon');
+    const spinner = card.querySelector('.ugc-spinner');
     const allVideos = document.querySelectorAll('.ugc-native-video');
 
     // If currently paused, PLAY / RESUME
@@ -839,14 +840,22 @@ document.addEventListener('DOMContentLoaded', () => {
           } catch (e) {}
           const pThumb = v.closest('.ugc-thumb');
           if (pThumb) {
-            pThumb.classList.remove('is-playing');
+            pThumb.classList.remove('is-playing', 'is-loading');
             const pi = pThumb.querySelector('.play-icon');
             const pau = pThumb.querySelector('.pause-icon');
+            const sp = pThumb.querySelector('.ugc-spinner');
             if (pi) pi.style.display = 'inline';
             if (pau) pau.style.display = 'none';
+            if (sp) sp.style.display = 'none';
           }
         }
       });
+
+      // Immediately show circular loading spinner while video buffers
+      thumb.classList.add('is-loading');
+      if (spinner) spinner.style.display = 'inline-block';
+      if (playIcon) playIcon.style.display = 'none';
+      if (pauseIcon) pauseIcon.style.display = 'none';
 
       // Always ensure sound is enabled on user tap
       video.muted = false;
@@ -855,9 +864,12 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         await video.play();
         currentPlayingVideo = video;
-        thumb.classList.add('is-playing');
-        if (playIcon) playIcon.style.display = 'none';
-        if (pauseIcon) pauseIcon.style.display = 'inline';
+        if (video.readyState >= 3) {
+          thumb.classList.remove('is-loading');
+          thumb.classList.add('is-playing');
+          if (spinner) spinner.style.display = 'none';
+          if (pauseIcon) pauseIcon.style.display = 'inline';
+        }
       } catch (err) {
         console.warn('Initial sound play restricted by browser, retrying:', err);
         video.muted = true;
@@ -865,11 +877,17 @@ document.addEventListener('DOMContentLoaded', () => {
           await video.play();
           video.muted = false; // Immediately unmute once playing
           currentPlayingVideo = video;
-          thumb.classList.add('is-playing');
-          if (playIcon) playIcon.style.display = 'none';
-          if (pauseIcon) pauseIcon.style.display = 'inline';
+          if (video.readyState >= 3) {
+            thumb.classList.remove('is-loading');
+            thumb.classList.add('is-playing');
+            if (spinner) spinner.style.display = 'none';
+            if (pauseIcon) pauseIcon.style.display = 'inline';
+          }
         } catch (e) {
           console.error('Video play failed:', e);
+          thumb.classList.remove('is-loading');
+          if (spinner) spinner.style.display = 'none';
+          if (playIcon) playIcon.style.display = 'inline';
         }
       }
     } else {
@@ -878,7 +896,8 @@ document.addEventListener('DOMContentLoaded', () => {
         video.pause();
       } catch (e) {}
       if (currentPlayingVideo === video) currentPlayingVideo = null;
-      thumb.classList.remove('is-playing');
+      thumb.classList.remove('is-playing', 'is-loading');
+      if (spinner) spinner.style.display = 'none';
       if (playIcon) playIcon.style.display = 'inline';
       if (pauseIcon) pauseIcon.style.display = 'none';
     }
@@ -897,6 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const progressBar = card.querySelector('.ugc-progress-bar');
       const playIcon = card.querySelector('.play-icon');
       const pauseIcon = card.querySelector('.pause-icon');
+      const spinner = card.querySelector('.ugc-spinner');
 
       if (!video || !thumb) return;
 
@@ -908,9 +928,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      // Video buffering / loading state
+      video.addEventListener('waiting', () => {
+        if (!video.paused) {
+          thumb.classList.add('is-loading');
+          if (spinner) spinner.style.display = 'inline-block';
+          if (playIcon) playIcon.style.display = 'none';
+          if (pauseIcon) pauseIcon.style.display = 'none';
+        }
+      });
+
+      // Video playing state (frames actively playing)
+      video.addEventListener('playing', () => {
+        thumb.classList.remove('is-loading');
+        thumb.classList.add('is-playing');
+        if (spinner) spinner.style.display = 'none';
+        if (playIcon) playIcon.style.display = 'none';
+        if (pauseIcon) pauseIcon.style.display = 'inline';
+      });
+
+      // Video paused state
+      video.addEventListener('pause', () => {
+        thumb.classList.remove('is-loading', 'is-playing');
+        if (spinner) spinner.style.display = 'none';
+        if (playIcon) playIcon.style.display = 'inline';
+        if (pauseIcon) pauseIcon.style.display = 'none';
+      });
+
+      // Video error fallback
+      video.addEventListener('error', () => {
+        thumb.classList.remove('is-loading', 'is-playing');
+        if (spinner) spinner.style.display = 'none';
+        if (playIcon) playIcon.style.display = 'inline';
+        if (pauseIcon) pauseIcon.style.display = 'none';
+      });
+
       // Reset when video ends
       video.addEventListener('ended', () => {
-        thumb.classList.remove('is-playing');
+        thumb.classList.remove('is-playing', 'is-loading');
+        if (spinner) spinner.style.display = 'none';
         if (playIcon) playIcon.style.display = 'inline';
         if (pauseIcon) pauseIcon.style.display = 'none';
         if (progressBar) progressBar.style.width = '0%';
